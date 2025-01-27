@@ -3,6 +3,9 @@ import {  api, HydrateClient } from "@/trpc/server";
 import { LoginLink, LogoutLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
+import Navbar from "./_components/Navbar";
+import HeroSection from "./_components/HeroSection";
+import LogoStrip from "./_components/LogoStrip";
 
 
 export default async function Home() {
@@ -26,24 +29,23 @@ export default async function Home() {
 
 
   return (
+
+    <div className="h-[3000px] relative">
+      <img src="/bg.png" alt="bg" className="absolute top-0 right-[0] "/>
+
     <HydrateClient>
-      {
-        user ? (
-          <div>
-            <h1>Welcome {user.given_name}</h1>
-            <p>Email: {user.email}</p>
-            <LogoutLink>Log out</LogoutLink>
+      <div className="w-full flex justify-center items-center relative">
 
-          </div>
-        ) : (<>
-          <LoginLink postLoginRedirectURL="http://localhost:3000/sync-user-to-db">Sign In</LoginLink>
-        <RegisterLink postLoginRedirectURL="http://localhost:3000/sync-user-to-db">Sign Up</RegisterLink>
-        </>
-        )
+      <Navbar/>
+      </div>
 
-      }
+      <LoginLink postLoginRedirectURL="http://localhost:3000/sync-user-to-db">Sign In</LoginLink>
+
+      <HeroSection/>
+      <LogoStrip/>
         
     
     </HydrateClient>
+    </div>
   );
 }

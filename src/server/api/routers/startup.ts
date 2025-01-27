@@ -4,34 +4,42 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/
 
 export const startupRouter = createTRPCRouter({
  
+  // comapanyName   String?
+  // companyUrl     String?
+  // industry       String?
+  // pinCode        Int?
+  // State          String?
+  // interestFields String[]
+
 
   createStartupUpdateUser: protectedProcedure
     .input(z.object({ 
-        startupName : z.string(),
-        startupEmail : z.string().email(),
-        industry : z.string(),
-        website : z.string().url(),
-        linkedInUrl : z.string().url(),
+      comapanyName  : z.string(),
+      companyUrl    : z.string().url(),
+      industry      : z.string(),
+      pinCode       : z.number(),
+      state         : z.string(),
+      interestFields: z.array(z.string()),
         role : z.enum(["STUDENT", "MENTOR", "STARTUP"]),
-        name : z.string(),
         avatarUrl : z.string(),
      }))
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.$transaction([
         ctx.db.startup.create({
           data: {
-              startupName : input.startupName,
-              startupEmail : input.startupEmail,
-              industry : input.industry,
-              website : input.website,
-              linkedInUrl : input.linkedInUrl,
+            comapanyName: input.comapanyName,
+            companyUrl: input.companyUrl,
+            industry: input.industry,
+            pinCode: input.pinCode,
+            state: input.state,
+            interestFields: input.interestFields,
               userId: ctx?.dbUser?.id!,
           },
         }),
         ctx.db.user.update({
           where: { id: ctx?.dbUser?.id! },
           data: {
-            name: input.name,
+            name: ctx.user.given_name + " " + ctx.user.family_name,
             avatarUrl: input.avatarUrl,
             role: "STARTUP",
             isRegistered: true,
@@ -43,37 +51,37 @@ export const startupRouter = createTRPCRouter({
       
     }),
 
-  updateStartup: protectedProcedure
-  .input(z.object({
-    startupName : z.string(),
-    startupEmail : z.string().email(),
-    industry : z.string(),
-    website : z.string().url(),
-    linkedInUrl : z.string().url(),
-  }))
-  .mutation(async ({ ctx, input }) => {
-    return ctx.db.startup.update({
-      where: { userId: ctx?.dbUser?.id },
-      data: input,
-    });
-  }
-  ),
+  // updateStartup: protectedProcedure
+  // .input(z.object({
+  //   startupName : z.string(),
+  //   startupEmail : z.string().email(),
+  //   industry : z.string(),
+  //   website : z.string().url(),
+  //   linkedInUrl : z.string().url(),
+  // }))
+  // .mutation(async ({ ctx, input }) => {
+  //   return ctx.db.startup.update({
+  //     where: { userId: ctx?.dbUser?.id },
+  //     data: input,
+  //   });
+  // }
+  // ),
 
-  deleteStartup: protectedProcedure
-  .mutation(async ({ ctx }) => {
-    return ctx.db.startup.delete({
-      where: { userId: ctx?.dbUser?.id },
-    });
-  }
-  ),
+  // deleteStartup: protectedProcedure
+  // .mutation(async ({ ctx }) => {
+  //   return ctx.db.startup.delete({
+  //     where: { userId: ctx?.dbUser?.id },
+  //   });
+  // }
+  // ),
 
-  getStartup: protectedProcedure
-  .query(async ({ ctx }) => {
-    return ctx.db.startup.findUnique({
-      where: { userId: ctx?.dbUser?.id },
-    });
-  }
-  ),
+  // getStartup: protectedProcedure
+  // .query(async ({ ctx }) => {
+  //   return ctx.db.startup.findUnique({
+  //     where: { userId: ctx?.dbUser?.id },
+  //   });
+  // }
+  // ),
 
 
     
