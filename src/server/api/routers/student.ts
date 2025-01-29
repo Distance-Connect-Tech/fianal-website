@@ -7,10 +7,16 @@ export const studentRouter = createTRPCRouter({
 
   createStudentUpdateUser: protectedProcedure
     .input(z.object({ 
-      university : z.string(),
-      course : z.string(),
-      yearOfStudy : z.enum(["FIRST", "SECOND", "THIRD", "FOURTH"]),
-      linkedInUrl : z.string(),
+      studentRole: z.enum(["HIGHSCHOOL", "COLLEGE", "WORKING"]),
+      institutionName : z.string(),
+      pinCode : z.number(),
+      state : z.string(),
+      interestFields : z.array(z.string()),
+      companyName : z.string(),
+      jobTitle : z.string(),
+      experience : z.string(),
+      industry : z.string(),
+      courseSpecialization : z.string(),
       role : z.enum(["STUDENT", "MENTOR", "STARTUP"]),
       isRegistered : z.boolean(),
       avatarUrl : z.string(),
@@ -22,11 +28,17 @@ export const studentRouter = createTRPCRouter({
         ctx.db.student.create({
           data: {
               userId : ctx?.dbUser?.id!,
-              university: input.university,
-              course: input.course,
-              yearOfStudy: input.yearOfStudy,
-              linkedInUrl: input.linkedInUrl,
-
+              studentRole : input.studentRole,
+              institutionName : input.institutionName,
+              pinCode : input.pinCode,
+              state : input.state,
+              interestFields : input.interestFields,
+              companyName : input.companyName,
+              jobTitle : input.jobTitle,
+              experience : input.experience,
+              industry : input.industry,
+              courseSpecialization : input.courseSpecialization,
+            
           },
         }),
         ctx.db.user.update({
@@ -41,36 +53,36 @@ export const studentRouter = createTRPCRouter({
       ])
     }),
 
-  updateStudent: protectedProcedure
-  .input(z.object({
-      university : z.string(),
-      course : z.string(),
-      yearOfStudy : z.enum(["FIRST", "SECOND", "THIRD", "FOURTH"]),
-      linkedInUrl : z.string(),
-  }))
-  .mutation(async ({ ctx, input }) => {
-    return ctx.db.student.update({
-      where: { userId: ctx?.dbUser?.id },
-      data: input,
-    });
-  }
-  ),
+  // updateStudent: protectedProcedure
+  // .input(z.object({
+  //     university : z.string(),
+  //     course : z.string(),
+  //     yearOfStudy : z.enum(["FIRST", "SECOND", "THIRD", "FOURTH"]),
+  //     linkedInUrl : z.string(),
+  // }))
+  // .mutation(async ({ ctx, input }) => {
+  //   return ctx.db.student.update({
+  //     where: { userId: ctx?.dbUser?.id },
+  //     data: input,
+  //   });
+  // }
+  // ),
 
-  deleteStudent: protectedProcedure
-  .mutation(async ({ ctx }) => {
-    return ctx.db.student.delete({
-      where: { userId: ctx?.dbUser?.id },
-    });
-  }
-  ),
+  // deleteStudent: protectedProcedure
+  // .mutation(async ({ ctx }) => {
+  //   return ctx.db.student.delete({
+  //     where: { userId: ctx?.dbUser?.id },
+  //   });
+  // }
+  // ),
 
-  getStudent: protectedProcedure
-  .query(async ({ ctx }) => {
-    return ctx.db.student.findUnique({
-      where: { userId: ctx?.dbUser?.id },
-    });
-  }
-  ),
+  // getStudent: protectedProcedure
+  // .query(async ({ ctx }) => {
+  //   return ctx.db.student.findUnique({
+  //     where: { userId: ctx?.dbUser?.id },
+  //   });
+  // }
+  // ),
 
 
     

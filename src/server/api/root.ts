@@ -3,6 +3,10 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import { studentRouter } from "./routers/student";
 import { mentorRouter } from "./routers/mentor";
 import { startupRouter } from "./routers/startup";
+import { meetingEventRouter } from "./routers/meetingEvent";
+import { availabilityRouter } from "./routers/availability";
+import { scheduledMeetingsRouter } from "./routers/scheduledMeeting";
+import { emailRouter } from "./routers/email";
 
 /**
  * This is the primary router for your server.
@@ -13,7 +17,11 @@ export const appRouter = createTRPCRouter({
   user: userRouter,
   student : studentRouter,
   mentor: mentorRouter,
-  startup : startupRouter
+  startup : startupRouter,
+  meetingEvent : meetingEventRouter,
+  availability : availabilityRouter,
+  scheduledMeetings : scheduledMeetingsRouter,
+  email : emailRouter
 });
 
 // export type definition of API

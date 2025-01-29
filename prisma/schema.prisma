@@ -11,22 +11,22 @@ datasource db {
 
 // 🧑‍💻 User Model
 model User {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
   kindeId      String  @unique
-  email         String   @unique
-  name          String?
+  email        String  @unique
+  name         String?
   avatarUrl    String?
-  role          Role     @default(USER)
-  isRegistered Boolean  @default(false)
+  role         Role    @default(USER)
+  isRegistered Boolean @default(false)
 
   // Relations (One-to-One)
-  student       Student?
-  mentor        Mentor?
-  startup       Startup?
+  student Student?
+  mentor  Mentor?
+  startup Startup?
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Enum for User Role
@@ -37,51 +37,130 @@ enum Role {
   STARTUP
 }
 
+enum SrudentRole {
+  HIGHSCHOOL
+  COLLEGE
+  WORKING
+}
+
 // 🎓 Student Model
 model Student {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  user          User     @relation(fields: [userId], references: [id])
-  userId        String   @unique @db.ObjectId
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @db.ObjectId
 
-  university    String?
-  course        String?
-  yearOfStudy   String?
-  linkedInUrl   String?
+  studentRole SrudentRole?
+  studentName String?
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  //High School
+  institutionName String?
+  pinCode         Int?
+  state           String?
+  interestFields  String[]
+
+  //College
+  courseSpecialization String?
+
+  //Working
+  companyName String?
+  jobTitle    String?
+  experience  String?
+  industry    String?
+
+  scheduledMeetings ScheduledMeetings[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // 🧑‍🏫 Mentor Model
 model Mentor {
-  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
-  user               User     @relation(fields: [userId], references: [id])
-  userId             String   @unique @db.ObjectId
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @db.ObjectId
 
-  positionTitle      String?
-  industryExperience String?
-  yearsOfExperience  String?
-  linkedInUrl        String?
-  professionalIdUrl  String?
-  companyEmail       String?
+  mentorName     String?
+  currentCompany String?
+  jobTitle       String?
+  experience     String?
+  industry       String?
+  pinCode        Int?
+  state          String?
+  hiringFields   String[]
 
+  meetingEvents     MeetingEvent[]
+  availability      Availability?
+  scheduledMeetings ScheduledMeetings[]
 
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // 🚀 Startup Model
 model Startup {
-  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
-  user               User     @relation(fields: [userId], references: [id])
-  userId             String   @unique @db.ObjectId
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @db.ObjectId
 
-  startupName        String?
-  startupEmail       String?
-  industry           String?
-  website            String?
-  linkedInUrl        String?
+  comapanyName   String?
+  companyUrl     String?
+  industry       String?
+  pinCode        Int?
+  state          String?
+  interestFields String[]
 
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 📅 MeetingEvent Model
+model MeetingEvent {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  mentor       Mentor @relation(fields: [mentorUserId], references: [userId])
+  mentorUserId String @db.ObjectId
+
+  eventName   String
+  duration    Int
+  description String?
+  meetUrl     String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Availability {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  mentor       Mentor @relation(fields: [mentorUserId], references: [userId])
+  mentorUserId String @unique @db.ObjectId
+
+  daysAvailable Json
+  startTime     String
+  endTime       String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ScheduledMeetings {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  mentor       Mentor @relation(fields: [mentorUserId], references: [userId])
+  mentorUserId String @db.ObjectId
+
+  student       Student @relation(fields: [studentUserId], references: [userId])
+  studentUserId String  @db.ObjectId
+
+  selectedTime      String
+  selectedDate      DateTime
+  formatedDate      String
+  formatedTimeStamp String
+  duration          Int
+  meetUrl           String
+  eventId           String
+  userNote          String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
