@@ -12,6 +12,7 @@ import { ZodError } from "zod";
 
 import { db } from "@/server/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { auth0 } from "@/lib/auth0";
 
 /**
  * 1. CONTEXT
@@ -98,10 +99,11 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 });
 
 const isAuthenticated = t.middleware(async ({ next, ctx }) => {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
+  const session = await auth0.getSession();
+ const user = session?.user;
+
   const dbUser = await ctx.db.user.findUnique({
-    where: { kindeId: user?.id },
+    where: { kindeId: user?.sub },
   });
 
   if (!user) {
