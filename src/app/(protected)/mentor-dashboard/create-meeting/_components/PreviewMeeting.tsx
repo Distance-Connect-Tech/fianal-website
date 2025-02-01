@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 type FormValue = {
     eventName:String,
     duration:Number,
-    meetUrl:String,
+    email:String,
     description:String
 }
 
@@ -61,9 +61,9 @@ function PreviewMeeting({formValue} : {formValue:FormValue}) {
         </h2>
         <h2 className='flex gap-2'>
             <MapPin />
-            <Link href={'#'} className='text-primary'>
-                {formValue?.meetUrl}
-            </Link>
+            <div  className='text-primary'>
+                Google Meet
+            </div>
         </h2>
     </div>
     {
