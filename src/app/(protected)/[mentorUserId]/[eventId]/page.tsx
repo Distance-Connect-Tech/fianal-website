@@ -16,7 +16,7 @@ async function SharedMeetingEvent({params }: {params: {mentorUserId: string, eve
       id: eventDetails?.id ?? '',
       eventName: eventDetails?.eventName ?? "",
       duration: eventDetails?.duration ?? 0,
-      meetUrl: eventDetails?.meetUrl ?? "",
+      meetEmail: eventDetails?.meetEmail ?? "",
     };
 
 
@@ -27,6 +27,7 @@ async function SharedMeetingEvent({params }: {params: {mentorUserId: string, eve
       select: {
         email: true,
         name: true,
+        
         mentor: {
           select: {
             availability: true

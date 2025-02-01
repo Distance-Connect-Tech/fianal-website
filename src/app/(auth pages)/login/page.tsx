@@ -22,21 +22,11 @@ export default function SignUpPage() {
 
       {/* Left Section */}
       <div className="relative z-20 flex w-full flex-col h-screen overflow-y-scroll no-scrollbar justify-between p-8 xl:w-[55%]">
-        <div className="mb-8 items-center justify-between md:flex xl:flex">
+        <div className="mb-8 items-center justify-start md:flex xl:flex">
           <div className="m-auto w-[300px] bg-gradient-to-r from-[#496F74] via-[#6E9195] to-[#2D4F61] bg-clip-text text-center font-inter text-2xl font-bold leading-[24px] text-transparent md:text-2xl xl:m-0">
             Distance Connect
           </div>
-          <div className="hidden w-[140px] items-center gap-4 xl:flex">
-            <Select defaultValue="en-UK">
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Language" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en-UK">English (UK)</SelectItem>
-                <SelectItem value="en-US">English (US)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          
         </div>
 
         <div className="mx-auto w-full max-w-md">

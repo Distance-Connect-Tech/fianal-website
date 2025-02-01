@@ -19,10 +19,10 @@ import { api } from '@/trpc/react'
   
 function MeetingForm({setFormValue} : {setFormValue:Function}) {
 
-    const [eventName,setEventName]=useState<String>();
+    const [eventName,setEventName]=useState<string>();
     const [duration,setDuration]=useState<Number>(30);
-    const [meetUrl,setMeetUrl]=useState<String>("https://meet.google.com/");
-    const [description, setDescription]=useState<String>();
+    const [email,setEmail]=useState<string>("example@gmail.com");
+    const [description, setDescription]=useState<string>();
     const [loading, setLoading] = useState(false);
     const router=useRouter();
     const createMeetingEvent = api.meetingEvent.createMeetingEvent.useMutation({
@@ -37,6 +37,19 @@ function MeetingForm({setFormValue} : {setFormValue:Function}) {
         },
         
     });
+
+
+//   const meetlinkGenerator = api.meet.generateMeetLink.useMutation({
+//     onSuccess: (data) => {
+//       console.log('Meeting Link Generated');
+//     //   toast('Meeting Link Generated');
+//     //   console.log(data);
+//     },
+//     onError: (error) => {
+//       toast.error(error.message);
+//   }
+// })
+
     
   
 
@@ -44,20 +57,20 @@ function MeetingForm({setFormValue} : {setFormValue:Function}) {
         setFormValue({
             eventName:eventName,
             duration:duration,
-            meetUrl:meetUrl,
+            email:email,
             description:description
         })
-    },[eventName,duration,meetUrl,description])
+    },[eventName,duration,email,description])
 
 
     const onCreateClick=async()=>{
         setLoading(true);
-
+    
         await createMeetingEvent.mutateAsync({
             eventName:eventName as string,
             duration:duration as number,
-            meetUrl: meetUrl as string,
-            description:description as string
+            description:description as string,
+            meetEmail : email as string
         })
     }
 
@@ -92,10 +105,10 @@ function MeetingForm({setFormValue} : {setFormValue:Function}) {
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            <h2 className='font-bold'>Location *</h2>
+            <h2 className='font-bold'>Email for Google Meet</h2>
             
-            <Input placeholder='Add Url'
-            onChange={(event)=>setMeetUrl(event.target.value)}
+            <Input placeholder='example@gmail.com'
+            onChange={(event)=>setEmail(event.target.value)}
             />
 
             <h2 className='font-bold'>Description</h2>
@@ -105,7 +118,7 @@ function MeetingForm({setFormValue} : {setFormValue:Function}) {
         </div>
 
         <Button className={`w-full mt-5 ${loading&&'bg-gray-300'}`}
-        disabled={loading || !eventName || !duration || !meetUrl || !description}
+        disabled={loading || !eventName || !duration || !email || !description}
         onClick={()=>onCreateClick()}
         >
         Create

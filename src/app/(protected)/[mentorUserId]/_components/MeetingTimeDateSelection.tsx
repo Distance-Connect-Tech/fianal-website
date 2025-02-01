@@ -13,7 +13,8 @@ import { api } from '@/trpc/react'
 import { Resend } from 'resend';
 import { render } from '@react-email/render';
 import Email from '@/../emails/index'
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
+import { toast } from 'sonner'
+import { useUser } from '@auth0/nextjs-auth0';
 
 
 
@@ -21,8 +22,8 @@ type EventInfo = {
   id : string;
   eventName: string;
   duration: number;
-  meetUrl: string;
   description: string | null;
+  meetEmail: string | null;
 }
 
 type MentorUserDetails = {
@@ -55,8 +56,13 @@ function MeetingTimeDateSelection({eventInfo,mentorUserDetails} :{eventInfo : Ev
     const [selectedTime,setSelectedTime]=useState<string>();
     const [userNote,setUserNote]=useState<string>('');
     const [prevBooking,setPrevBooking]=useState<ScheduledMeeting[]>([]);
+    const [meetUrl,setMeetUrl]=useState<string>('');
     const router=useRouter();
     const [loading,setLoading]=useState(false);
+    const { user, error, isLoading } = useUser();
+    const [userName , setUserName]=useState<string>('');
+    const [userEmail , setUserEmail]=useState<string>('');
+    const [step , setStep]=useState<number>(1);
 
 
 
@@ -102,6 +108,16 @@ function MeetingTimeDateSelection({eventInfo,mentorUserDetails} :{eventInfo : Ev
         }
     })
 
+      const meetlinkGenerator = api.meet.generateMeetLink.useMutation({
+    onSuccess: (data) => {
+      console.log('Meeting Link Generated');
+    //   toast('Meeting Link Generated');
+    //   console.log(data);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+  }
+})
 
 
     const createTimeSlot=(interval: number)=>{
@@ -141,6 +157,9 @@ function MeetingTimeDateSelection({eventInfo,mentorUserDetails} :{eventInfo : Ev
 
 
     const getCombinedTimestamp = (date: Date, time: string) => {
+      console.log(date)
+      console.log("-----------------")
+      console.log(time)
       const [hours, minutesPart] = time.split(':');
       const minutes = minutesPart ? parseInt(minutesPart.slice(0, 2), 10) : 0;
       const isPM = time.toLowerCase().includes('pm');
@@ -155,9 +174,36 @@ function MeetingTimeDateSelection({eventInfo,mentorUserDetails} :{eventInfo : Ev
       return updatedDate.getTime(); // Returns a timestamp in milliseconds
   };
 
+  function convertToDateTime(date: Date, time: string): Date {
+    const year = date.getFullYear();
+    const month = date.getMonth(); // Month is 0-based
+    const day = date.getDate();
+  
+    // Extract time components from the "hh:mm AM/PM" format
+    const [timePart, modifier] = time.split(" ");
+    let [hours = 0, minutes = 0] = (timePart?.split(":").map(Number) ?? [0, 0]);
+  
+    // Convert 12-hour format to 24-hour format
+    if (modifier === "PM" && hours !== 12) {
+      hours += 12;
+    } else if (modifier === "AM" && hours === 12) {
+      hours = 0;
+    }
+  
+    // Create new Date object with the specified date and time
+    return new Date(year, month, day, hours, minutes);
+  }
+
     const handleScheduleEvent=async()=>{
 
         setLoading(true)
+        const {meetLink} = await meetlinkGenerator.mutateAsync({ dateTime: convertToDateTime(date , selectedTime!).toString(), duration: eventInfo.duration, attendees: [{ email: eventInfo.meetEmail! }  , { email : userEmail }] });
+
+        if(!meetLink){
+          toast.error('Error in generating meeting link')
+          return
+        }
+        setMeetUrl(meetLink)
        await createScheduledMeeting.mutateAsync({
             mentorUserId:mentorUserDetails.mentorUserId,
             selectedTime:selectedTime ?? '',
@@ -165,7 +211,7 @@ function MeetingTimeDateSelection({eventInfo,mentorUserDetails} :{eventInfo : Ev
             formatedDate:format(date,'PPP'),
             formatedTimeStamp:getCombinedTimestamp(date,selectedTime!).toString(),
             duration:eventInfo.duration,
-            meetUrl:eventInfo.meetUrl,
+            meetUrl: meetLink,
             eventId:eventInfo.id,
             userNote:userNote
         })
@@ -177,14 +223,14 @@ function MeetingTimeDateSelection({eventInfo,mentorUserDetails} :{eventInfo : Ev
      * @param {*} user 
      */
     const sendEmail= async ()=>{
-      if(mentorUserDetails.name && date && eventInfo.duration && selectedTime && eventInfo.meetUrl &&  mentorUserDetails.email){
+      if(mentorUserDetails.name && date && eventInfo.duration && selectedTime && meetUrl &&  mentorUserDetails.email){
         
           sendEmaill.mutateAsync({
             date: format(date, 'PPP').toString(),
             mentorName: mentorUserDetails?.name,
             duration: eventInfo?.duration.toString(),
             meetingTime: selectedTime,
-            meetingUrl: eventInfo?.meetUrl
+            meetingUrl: meetUrl,
           })
       }
       else{
@@ -214,17 +260,18 @@ function MeetingTimeDateSelection({eventInfo,mentorUserDetails} :{eventInfo : Ev
                 >{eventInfo?.eventName?eventInfo?.eventName:'Meeting Name'}</h2>
                 <div className='mt-5 flex flex-col gap-4'>
                     <h2 className='flex gap-2'><Clock/>{eventInfo?.duration} Min </h2>
-                    <h2 className='flex gap-2'><MapPin/>Meeting </h2>
+                    <h2 className='flex gap-2'><MapPin/><div
+                    className='text-primary'
+                    >{"Google Meet"}</div> </h2>
                     <h2 className='flex gap-2'><CalendarCheck/>{format(date,'PPP')}  </h2>
                   {selectedTime&&  <h2 className='flex gap-2'><Timer/>{selectedTime}  </h2>}
                   
-                    <Link href={eventInfo?.meetUrl?eventInfo?.meetUrl:'#'}
-                    className='text-primary'
-                    >{eventInfo?.meetUrl}</Link>
+                    
                 </div>
             </div>
             {/* Time & Date Selction  */}
-          <TimeDateSelection
+          {step === 1 ?
+            <TimeDateSelection
             date={date}
             enableTimeSlot={enableTimeSlot}
             handleDateChange={handleDateChange}
@@ -232,17 +279,26 @@ function MeetingTimeDateSelection({eventInfo,mentorUserDetails} :{eventInfo : Ev
             timeSlots={timeSlots}
             selectedTime={selectedTime!}
             prevBooking={prevBooking}
-           />
-     
+           /> 
+           : 
+            <UserFormInfo setUserEmail={setUserEmail} setUserName={setUserName} setUserNote={setUserNote} />
+     }
 
        </div>
        <div className='flex gap-3 justify-end'>
     
+      { step === 1 ?  
        <Button  
+       onClick={() => setStep(2)}
+       > 
+       {loading?<LoaderIcon className='animate-spin'/>:'Next' }
+      </Button>
+      :
+      <Button  
        onClick={handleScheduleEvent}
        > 
        {loading?<LoaderIcon className='animate-spin'/>:'Schedule' }
-      </Button>
+      </Button>}
        </div>
     </div>
   )

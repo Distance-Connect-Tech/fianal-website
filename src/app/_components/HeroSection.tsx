@@ -1,6 +1,14 @@
+"use client"
+import { api } from '@/trpc/react';
 import React from 'react'
 
-const HeroSection = () => {
+
+
+
+const HeroSection =() => {
+  
+
+
   return (
     <div className='h-[640px] flex justify-center items-center  '>
         <div className='flex w-[80%] justify-between items-center'>
@@ -9,6 +17,7 @@ const HeroSection = () => {
                 Find Your Perfect Mentor <br/>
                 For Growth
                 </h1>
+
                 <h2 className='text-[#3D568F]  font-inter text-[24px] font-light leading-[32px]'>
                 Lorem Ipsum is simply dummy text of the printing
                 <br/> and typesetting industry. Lorem Ipsum has been 

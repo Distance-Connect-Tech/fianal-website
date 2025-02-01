@@ -22,21 +22,11 @@ export default function SignUpPage() {
 
       {/* Left Section */}
       <div className="w-full xl:w-[55%] overflow-y-scroll no-scrollbar p-8 flex flex-col  justify-between relative z-20">
-        <div className="md:flex xl:flex  justify-between items-center mb-8">
+        <div className="md:flex xl:flex  justify-start items-center mb-8">
           <div className="bg-gradient-to-r xl:m-0 m-auto w-[300px] text-center from-[#496F74] via-[#6E9195] to-[#2D4F61] bg-clip-text text-transparent font-inter text-2xl md:text-2xl font-bold leading-[24px]">
             Distance Connect
           </div>
-          <div className=" items-center hidden xl:flex w-[140px]  gap-4">
-            <Select defaultValue="en-UK">
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Language" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en-UK">English (UK)</SelectItem>
-                <SelectItem value="en-US">English (US)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        
         </div>
 
         <div className="max-w-md mx-auto w-full">
@@ -55,27 +45,6 @@ export default function SignUpPage() {
               <Input id="email" type="email" placeholder="yourname@email.com" />
             </div>
 
-            <div className="space-y-2 text-[#828282]">
-              <Label htmlFor="phone">Phone number</Label>
-              <div className="flex gap-2">
-                <Select defaultValue="+1">
-                  <SelectTrigger className="w-[100px]">
-                    <SelectValue placeholder="Code" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="+1">+91</SelectItem>
-                    <SelectItem value="+44">+44</SelectItem>
-                    <SelectItem value="+91">+91</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Input
-                  id="phone"
-                  type="tel"
-                  placeholder="(555) 000-0000"
-                  className="flex-1"
-                />
-              </div>
-            </div>
 
             <div className="space-y-2 text-[#828282]">
               <Label htmlFor="password">Create password</Label>
