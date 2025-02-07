@@ -2,13 +2,11 @@
 import React, { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ScheduledMeetingList from './_components/ScheduledMeetingList'
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { format } from 'date-fns'
 import { api } from '@/trpc/react';
 
 function ScheduledMeeting() {
 
-    const {user}=useKindeBrowserClient();
    
 
 

@@ -83,34 +83,50 @@ export const mentorRouter = createTRPCRouter({
   // }
   // ),
 
-  // getAllMentors: publicProcedure
-  // .query(async ({ ctx }) => {
-  //   return ctx.db.user.findMany({
-  //     where: {
-  //       role: "MENTOR"
-  //     },
-  //     select: {
-  //       id: true,
-  //       name: true,
-  //       mentor: {
-  //         select: {
-  //           positionTitle: true,
-  //           industryExperience: true,
-  //           yearsOfExperience: true,
-  //           linkedInUrl: true,
-  //           professionalIdUrl: true,
-  //           companyEmail: true,
-  //           meetingEvents: {
-  //             select: {
-  //               id: true,
-  //               eventName: true,
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   })
-  // })
+  getAllMentors: publicProcedure
+  .query(async ({ ctx }) => {
+    return ctx.db.mentor.findMany({
+      select: {
+        userId: true,
+        mentorName: true,
+        currentCompany: true,
+        jobTitle: true,
+        experience: true,
+        industry: true,
+        hiringFields: true,
+        meetingEvents: {
+          select: {
+            id: true,
+            eventName: true,
+          }
+        }
+      }
+    })
+  }),
+
+  getMentorByUserId: publicProcedure
+  .input(z.object({ userId: z.string() }))
+  .query(async ({ ctx, input }) => {
+    return ctx.db.mentor.findUnique({
+      where: { userId: input.userId },
+      select : {
+        userId: true,
+        mentorName: true,
+        currentCompany: true,
+        jobTitle: true,
+        experience: true,
+        industry: true,
+        hiringFields: true,
+        meetingEvents : {
+          select : {
+            id : true,
+            eventName : true,
+          }
+        }
+      }
+    });
+
+  })
 
 
 

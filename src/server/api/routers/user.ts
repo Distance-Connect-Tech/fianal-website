@@ -38,6 +38,12 @@ export const userRouter = createTRPCRouter({
   }
   ),
 
+  getUserRole: protectedProcedure
+  .query(async ({ ctx }) => {
+    return ctx.dbUser?.role;
+  }
+  
+  ),
   deleteUser: protectedProcedure
   .mutation(async ({ ctx }) => {
     return ctx.db.user.delete({

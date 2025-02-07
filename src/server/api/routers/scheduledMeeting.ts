@@ -57,5 +57,15 @@ export const scheduledMeetingsRouter = createTRPCRouter({
       });
     }),
 
+
+    getScheduledMeetingsListByStudent: protectedProcedure
+    .query(async ({ ctx }) => {
+      return ctx.db.scheduledMeetings.findMany({
+        where: {
+          studentUserId: ctx.dbUser!.id
+        },
+      });
+    }),
+
  
   })

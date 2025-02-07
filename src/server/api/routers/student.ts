@@ -38,6 +38,8 @@ export const studentRouter = createTRPCRouter({
               experience : input.experience,
               industry : input.industry,
               courseSpecialization : input.courseSpecialization,
+              studentName : input.name,
+              
             
           },
         }),

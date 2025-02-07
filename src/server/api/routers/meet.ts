@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import { google } from 'googleapis';
 import { JWT } from 'google-auth-library';
 
 export const meetRouter = createTRPCRouter({
-  generateMeetLink: publicProcedure
+  generateMeetLink: protectedProcedure
     .input(z.object({ 
       dateTime: z.string(),
       duration : z.number().int(),
@@ -15,12 +15,10 @@ export const meetRouter = createTRPCRouter({
       // console.log("--------------------------------------")
       // console.log(input.dateTime)
       try {
-        // Validate environment variables
         if (!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
           throw new Error('Missing Google service account credentials');
         }
 
-        // Configure JWT Auth
         const auth = new JWT({
           email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
           key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
@@ -28,7 +26,6 @@ export const meetRouter = createTRPCRouter({
           subject: 'talha@distanceconnect.in',
         });
 
-        // Initialize Calendar API
         const calendar = google.calendar({ version: 'v3', auth });
 
         // Create event payload

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { toast } from 'sonner'
 import { api } from '@/trpc/react'
 
@@ -30,7 +29,6 @@ function Availability() {
     });
     const [startTime, setStartTime] = useState<string>('');
     const [endTime, setEndTime] = useState<string>('');
-    const {user}=useKindeBrowserClient();
 
 
     const createAndUpdateAvailability =  api.availability.createAndUpdateAvailability.useMutation({
