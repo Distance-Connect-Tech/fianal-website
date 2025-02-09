@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import Navbar from "./_components/Navbar";
 import HeroSection from "./_components/HeroSection";
 import LogoStrip from "./_components/LogoStrip";
+import KeyBenefits from "./_components/KeyBenefits";
+import Solutions from "./_components/Solutions";
 
 export default async function Home() {
 
@@ -38,7 +40,7 @@ export default async function Home() {
 
     return (
 
-    <div className="h-[3000px] relative">
+    <div className="h-[4000px] relative">
       <img src="/bg.png" alt="bg" className="absolute top-0 right-[0] "/>
 
       <div className="w-full flex justify-center items-center relative">
@@ -48,6 +50,9 @@ export default async function Home() {
 
       <HeroSection/>
       <LogoStrip/>
+      <KeyBenefits/>
+      <Solutions/>
+
         
     
     </div>

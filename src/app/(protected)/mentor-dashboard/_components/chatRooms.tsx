@@ -4,15 +4,15 @@ import { api } from '@/trpc/react';
 import React from 'react'
 
 type Room = {
-    id: string;
-    student: {
-        studentName: string | null;
-    };
-    mentor: {
-        mentorName: string | null;
-    };
-    lastMessage: string;
-    mentorUnreadCount: number;
+  id: string;
+  student: {
+      studentName: string | null;
+  };
+  lastMessage: string;
+  mentorUnreadCount: number;
+  mentor: {
+      mentorName: string | null;
+  };
 }
 
 const chatRooms = ({room} : {room : Room}) => {

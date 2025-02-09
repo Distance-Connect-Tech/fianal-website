@@ -10,31 +10,22 @@ const page = async ({params} : {params: {chatRoomId : string}}) => {
   
   const {chatRoomId} = params
 
-  let chatRoom = await api.chatRoom.getChatRoomById({chatRoomId})
-  console.log("chatRoom", chatRoom)
-  
-  const initialMessages = await db.chatMessage.findMany({
-    where: { chatRoomId: chatRoomId},
-    orderBy: { createdAt: 'asc' }
-  });
-
+ 
+ 
+  const initialMessages = await api.chat.getMessages({chatRoomId})
+  console.log("initialMessages", initialMessages)
 
  
   
-  const chatRoomDetails = {
-    chatRoomId: chatRoom?.id || "",
-    mentorUserId: chatRoom?.mentorUserId || "",
-    studentUserId: chatRoom?.studentUserId || ""
-  }
+
 
 
     
   return (
     <div>
-      {/* <Chat chatRoomDetails={chatRoomDetails!}/> */}
       <Chat 
       chatRoomId={chatRoomId}
-      initialMessages={initialMessages}
+      initialMessages={initialMessages ?? []}
       userId={userId!}
     />
     </div>

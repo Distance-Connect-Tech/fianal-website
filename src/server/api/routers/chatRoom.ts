@@ -35,10 +35,13 @@ getChatRoomById: protectedProcedure
                 id: input.chatRoomId,
             },
             select : {
-                chatImages : true,
                 mentorUserId :true,
                 studentUserId : true,
+                lastMessage : true,
+                mentorUnreadCount : true,
+                studentUnreadCount : true,
                 id: true,
+                student : true
 
                 
             }
@@ -68,7 +71,6 @@ getChatRoomById: protectedProcedure
                 id: true,
                 lastMessage: true,
                 mentorUnreadCount: true,
-                chatImages : true,
                 mentor : {
                     select : {
                         mentorName : true,
@@ -92,7 +94,6 @@ getChatRoomById: protectedProcedure
                 id: true,
                 lastMessage: true,
                studentUnreadCount: true,
-               chatImages : true,
                 mentor : {
                     select : {
                         mentorName : true,
