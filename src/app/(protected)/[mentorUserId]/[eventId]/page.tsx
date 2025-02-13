@@ -9,6 +9,7 @@ async function SharedMeetingEvent({params }: {params: {mentorUserId: string, eve
 
 
 
+
     const eventDetails = await api.meetingEvent.getMeetingEventById({id: eventId});
 
     const updatedEventDetails = {

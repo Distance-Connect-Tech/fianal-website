@@ -27,6 +27,7 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
 }
 
 // Enum for User Role
@@ -68,6 +69,7 @@ model Student {
   industry    String?
 
   scheduledMeetings ScheduledMeetings[]
+  chatRooms         ChatRoom[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -91,6 +93,7 @@ model Mentor {
   meetingEvents     MeetingEvent[]
   availability      Availability?
   scheduledMeetings ScheduledMeetings[]
+  chatRooms         ChatRoom[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -164,3 +167,50 @@ model ScheduledMeetings {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+model ChatRoom {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  mentor       Mentor @relation(fields: [mentorUserId], references: [userId])
+  mentorUserId String @db.ObjectId
+
+  student       Student @relation(fields: [studentUserId], references: [userId])
+  studentUserId String  @db.ObjectId
+
+  lastMessage String
+  mentorUnreadCount  Int @default(0)
+  studentUnreadCount Int @default(0)
+  chatMessages chatMessage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([mentorUserId, studentUserId], name: "mentor_student_index")
+}
+
+
+model chatMessage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  senderId String
+  senderRole String
+  message String?
+  
+
+  chatRoom ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoomId String @db.ObjectId
+
+  imageName String?
+  imagePath String?
+  
+
+  type String @default("TEXT")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([chatRoomId, createdAt], name: "chatRoom_createdAt_index")
+}
+
+
+
+

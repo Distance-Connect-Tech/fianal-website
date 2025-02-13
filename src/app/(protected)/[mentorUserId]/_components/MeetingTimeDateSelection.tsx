@@ -1,6 +1,6 @@
 "use client"
 import { Button } from '@/components/ui/button'
-import { format } from 'date-fns'
+import { format, isValid } from 'date-fns'
 import { CalendarCheck, Clock, LoaderIcon, MapPin, Timer } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -142,6 +142,9 @@ function MeetingTimeDateSelection({eventInfo,mentorUserDetails} :{eventInfo : Ev
      * @param {*} date 
      */
     const handleDateChange=(date: Date)=>{
+      if (!isValid(date)) {
+        return;
+      }
         setDate(date);
         const day=format(date,'EEEE');
         

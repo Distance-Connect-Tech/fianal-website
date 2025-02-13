@@ -11,8 +11,9 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "@/server/db";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { auth0 } from "@/lib/auth0";
+import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
+import { limiters } from "@/lib/rateLimit";
 
 /**
  * 1. CONTEXT
@@ -25,9 +26,16 @@ import { auth0 } from "@/lib/auth0";
  * wrap this and provides the required context.
  *
  * @see https://trpc.io/docs/server/context
+ * 
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
+export const createTRPCContext = async (opts: CreateNextContextOptions) => {
+  const { req, res } = opts;
+  const ip = Array.isArray(req?.headers["x-forwarded-for"])
+    ? req?.headers["x-forwarded-for"][0]
+    : req?.headers["x-forwarded-for"]?.split(",")[0] || req?.socket?.remoteAddress;
+
   return {
+    ip,
     db,
     ...opts,
   };
@@ -81,30 +89,12 @@ export const createTRPCRouter = t.router;
  * You can remove this if you don't like it, but it can help catch unwanted waterfalls by simulating
  * network latency that would occur in production but not in local development.
  */
-const timingMiddleware = t.middleware(async ({ next, path }) => {
-  const start = Date.now();
 
-  if (t._config.isDev) {
-    // artificial delay in dev
-    const waitMs = Math.floor(Math.random() * 400) + 100;
-    await new Promise((resolve) => setTimeout(resolve, waitMs));
-  }
+const rateLimiter = t.middleware(async ({ ctx, next }) => {
+  // Authenticated user
 
-  const result = await next();
-
-  const end = Date.now();
-  console.log(`[TRPC] ${path} took ${end - start}ms to execute`);
-
-  return result;
-});
-
-const isAuthenticated = t.middleware(async ({ next, ctx }) => {
   const session = await auth0.getSession();
- const user = session?.user;
-
-  const dbUser = await ctx.db.user.findUnique({
-    where: { kindeId: user?.sub },
-  });
+  const user = session?.user;
 
   if (!user) {
     throw new TRPCError({
@@ -112,7 +102,78 @@ const isAuthenticated = t.middleware(async ({ next, ctx }) => {
       message: 'You must be logged in to access this resource',
     });
   }
+ 
+   const dbUser = await ctx.db.user.findUnique({
+     where: { kindeId: user?.sub },
+   });
+ 
+ 
+  if (user?.sub) {
+    const localLimit = await limiters.local.limit(`user:${user.sub}`, 10000, 5);
+    if (!localLimit.success) {
+      throw new TRPCError({ 
+        code: "TOO_MANY_REQUESTS",
+        message: `Local limit exceeded. Try again in ${Math.ceil(localLimit.pending/1000)}s`
+      });
+    }
 
+  const globalLimit = await limiters.global.limit(`user:${user.sub}`);
+  if (!globalLimit.success) {
+    throw new TRPCError({ 
+      code: "TOO_MANY_REQUESTS",
+      message: `Global limit exceeded. Try again in ${Math.ceil(globalLimit.reset/1000)}s`
+    });
+  }
+    return next({
+      ctx: {
+        ...ctx,
+        user,
+        dbUser,
+      },
+    });
+  }
+
+  // // Anonymous user (IP-based)
+  // if (ctx.ip) {
+  //   const { success } = await anonymousRatelimit.limit(`ip:${ctx.ip}`);
+  //   if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+  //   return next();
+  // }
+
+  // Fallback for missing IP (unlikely in production)
+  throw new TRPCError({ code: "BAD_REQUEST" });
+});
+
+
+const anonymousRatelimitMiddleware = t.middleware(async ({ ctx, next }) => {
+  // // Anonymous user (IP-based)
+  // if (ctx.ip) {
+  //   const { success } = await anonymousRatelimit.limit(`ip:${ctx?.ip!}`);
+  //   if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+  //   return next();
+  // }
+  // // Fallback for missing IP (unlikely in production)
+  // throw new TRPCError({ code: "BAD_REQUEST" });
+  return next();
+});
+
+const isAuthenticated = t.middleware(async ({ next, ctx }) => {
+  const session = await auth0.getSession();
+ const user = session?.user;
+//  console.log("--------------------" ,user)
+ 
+ if (!user) {
+   throw new TRPCError({
+     code: 'UNAUTHORIZED',
+     message: 'You must be logged in to access this resource',
+    });
+  }
+  
+  const dbUser = await ctx.db.user.findUnique({
+    where: { kindeId: user?.sub },
+  });
+
+  // console.log("===========" , dbUser)
   
 
   return next({
@@ -133,6 +194,5 @@ const isAuthenticated = t.middleware(async ({ next, ctx }) => {
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure.use(timingMiddleware);
-export const protectedProcedure = t.procedure.use(isAuthenticated);
-
+export const protectedProcedure = t.procedure.use(rateLimiter);
+export const publicProcedure = t.procedure.use(anonymousRatelimitMiddleware);

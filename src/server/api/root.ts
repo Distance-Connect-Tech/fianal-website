@@ -8,6 +8,9 @@ import { availabilityRouter } from "./routers/availability";
 import { scheduledMeetingsRouter } from "./routers/scheduledMeeting";
 import { emailRouter } from "./routers/email";
 import { meetRouter } from "./routers/meet";
+import { chatRouter } from "./routers/chat";
+import { chatRoomRouter } from "./routers/chatRoom";
+import { fileRouter } from "./routers/file";
 
 /**
  * This is the primary router for your server.
@@ -23,7 +26,10 @@ export const appRouter = createTRPCRouter({
   availability : availabilityRouter,
   scheduledMeetings : scheduledMeetingsRouter,
   email : emailRouter,
-  meet : meetRouter
+  meet : meetRouter,
+  chat : chatRouter,
+  chatRoom : chatRoomRouter,
+  file : fileRouter
 });
 
 // export type definition of API

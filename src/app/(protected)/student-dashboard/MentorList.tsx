@@ -1,43 +1,79 @@
 "use client";
-import { api } from '@/trpc/react';
-import React from 'react'
+import React from "react";
+import { api } from "@/trpc/react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const MentorList = () => {
-    const [mentors, setMentors] = React.useState([]);
-    const {data, isError, isLoading} = api.mentor.getAllMentors.useQuery();
-    
+  const { data, isError, isLoading } = api.mentor.getAllMentors.useQuery();
+
   return (
-    <div>
-        {isLoading && <div>Loading...</div>}
-        {isError && <div>Error</div>}
-        {data && data.map((mentor) => {
-          const eventId = mentor.mentor?.meetingEvents?.map((event) => {
-            return {
-              id: event.id,
-              eventName: event.eventName
-            }
-          } );
-          // console.log(eventId)
-        return(
+    <div className="container mx-auto p-6">
+      {isLoading && (
+        <div className="text-center text-lg text-gray-600">Loading...</div>
+      )}
+      {isError && (
+        <div className="text-center text-lg text-red-500">
+          Error loading mentors.
+        </div>
+      )}
+      {data &&
+        data.map((mentor) => {
+          // Map events to a simpler format
+          const events = mentor.meetingEvents?.map((event) => ({
+            id: event.id,
+            eventName: event.eventName,
+          }));
 
-            <div key={mentor.id} className='border p-4 my-2'>
-              <a href={`/${mentor.id}`} className='text-blue-500'>{mentor.name}</a>
-              <div className='font-semibold'>Events</div>
-              {
-                eventId?.map((event) => {
-                  return <div>
-                    <a target='_blank' href={`/${mentor.id}/${event.id}`}>{event.eventName}</a>
+          return (
+            <Card key={mentor.userId} className="mb-6 shadow hover:shadow-lg transition">
+              <CardHeader className="flex justify-between items-center">
+                <CardTitle className="text-xl font-bold">
+                  <a
+                    href={`/${mentor.userId}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    {mentor.mentorName}
+                  </a>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="mb-4">
+                  <p className="text-gray-700">
+                    <span className="font-semibold">Job Title:</span> {mentor.jobTitle}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-semibold">Company:</span> {mentor.currentCompany}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-semibold">Experience:</span> {mentor.experience} years
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-semibold">Industry:</span> {mentor.industry}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-800 mb-2">Meeting Events</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {events?.map((event) => (
+                      <Badge key={event.id} className="cursor-pointer bg-blue-500 text-white hover:bg-blue-600">
+                        <a
+                          target="_blank"
+                          rel="noreferrer"
+                          href={`/${mentor.userId}/${event.id}`}
+                        >
+                          {event.eventName}
+                        </a>
+                      </Badge>
+                    ))}
                   </div>
-                })
-              }
-                <h3 className='font-bold'>{mentor.name}</h3>
-                <h3>{mentor.mentor?.companyEmail}</h3>
-            </div>
-        )}
-        )}
-
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
     </div>
-  )
-}
+  );
+};
 
-export default MentorList
+export default MentorList;

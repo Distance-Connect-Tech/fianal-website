@@ -33,7 +33,7 @@ TimeDateSelection({date,handleDateChange,timeSlots,setSelectedTime,enableTimeSlo
             selected={date}
             onSelect={(d)=>handleDateChange(d!)}
             className="rounded-md border mt-5"
-           disabled={(date)=>date<=new Date()}
+           disabled={(date)=>date < new Date()}
         />
     </div>
     <div className='flex flex-col w-full overflow-auto gap-4 p-5'
