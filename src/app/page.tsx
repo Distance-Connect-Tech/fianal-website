@@ -6,6 +6,13 @@ import HeroSection from "./_components/HeroSection";
 import LogoStrip from "./_components/LogoStrip";
 import KeyBenefits from "./_components/KeyBenefits";
 import Solutions from "./_components/Solutions";
+import Guide from "./_components/Guide";
+import FeatureMentor from "./_components/FeatureMentor";
+import OurStory from "./_components/OurStory";
+import Potential from "./_components/Potential";
+import Testimonials from "./_components/Testimonials";
+import Faq from "./_components/Faq";
+import Footer from "./_components/Footer";
 
 export default async function Home() {
 
@@ -52,7 +59,21 @@ export default async function Home() {
       <LogoStrip/>
       <KeyBenefits/>
       <Solutions/>
+      <div className="relative">
+  <Guide />
+</div>
+<div className="relative mt-20"> {/* Increased top margin for FeatureMentor */}
+  <FeatureMentor />
+</div>
 
+<OurStory/>
+<Potential/>
+<Testimonials/>
+<Faq/>
+<div className="lg:mt-10">
+<Footer/>
+
+</div>
         
     
     </div>

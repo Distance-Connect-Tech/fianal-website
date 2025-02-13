@@ -442,7 +442,7 @@ const Solutions = () => {
       </div>
 
       {/* desktop section */}
-      <div className="lg:flex h-[564px] hidden  w-full flex-shrink-0 rounded-[30px] bg-[linear-gradient(0deg,#FFFDEB_0%,#FFFDEB_100%),conic-gradient(from_196deg_at_78.23%_63.56%,rgba(245,246,255,0)_0deg,rgba(197,192,216,0)_360deg)]">
+      <div className="lg:flex h-[610px] hidden  w-full flex-shrink-0 rounded-[30px] bg-[linear-gradient(0deg,#FFFDEB_0%,#FFFDEB_100%),conic-gradient(from_196deg_at_78.23%_63.56%,rgba(245,246,255,0)_0deg,rgba(197,192,216,0)_360deg)]">
         <div className="flex w-[50%] flex-col gap-4 px-[68px] pt-[60px]">
           <button className="h-[30px] w-[98px] flex-shrink-0 rounded-[20px] border border-white bg-[rgba(246,212,207,0.30)] font-inter text-[12px] font-medium leading-[110%] text-black backdrop-blur-[25px]">
             Student
@@ -472,7 +472,7 @@ const Solutions = () => {
                   />
                 </svg>
               </div>
-              <div className="font-inter text-[20px] font-normal leading-[100%] text-[#3D568F]">
+              <div className="font-inter lg:text-[15px] xl:text-[20px] font-normal leading-[100%] text-[#3D568F]">
                 Skill development
               </div>
             </div>
@@ -493,7 +493,7 @@ const Solutions = () => {
                   />
                 </svg>
               </div>
-              <div className="font-inter text-[20px] font-normal leading-[100%] text-[#3D568F]">
+              <div className="font-inter lg:text-[15px] xl:text-[20px] font-normal leading-[100%] text-[#3D568F]">
                 Personalized career guidance
               </div>
             </div>
@@ -514,7 +514,7 @@ const Solutions = () => {
                   />
                 </svg>
               </div>
-              <div className="font-inter text-[20px] font-normal leading-[100%] text-[#3D568F]">
+              <div className="font-inter lg:text-[15px] xl:text-[20px] font-normal leading-[100%] text-[#3D568F]">
                 Resume/CV review
               </div>
             </div>
@@ -535,7 +535,7 @@ const Solutions = () => {
                   />
                 </svg>
               </div>
-              <div className="font-inter text-[20px] font-normal leading-[100%] text-[#3D568F]">
+              <div className="font-inter lg:text-[15px] xl:text-[20px] font-normal leading-[100%] text-[#3D568F]">
                 Internship & Job opportunities
               </div>
             </div>
@@ -556,7 +556,7 @@ const Solutions = () => {
                   />
                 </svg>
               </div>
-              <div className="font-inter text-[20px] font-normal leading-[100%] text-[#3D568F]">
+              <div className="font-inter lg:text-[15px] xl:text-[20px] font-normal leading-[100%] text-[#3D568F]">
                 Job interview preparation
               </div>
             </div>
@@ -577,7 +577,7 @@ const Solutions = () => {
                   />
                 </svg>
               </div>
-              <div className="font-inter text-[20px] font-normal leading-[100%] text-[#3D568F]">
+              <div className="font-inter lg:text-[15px] xl:text-[20px] font-normal leading-[100%] text-[#3D568F]">
                 Networking strategies
               </div>
             </div>
