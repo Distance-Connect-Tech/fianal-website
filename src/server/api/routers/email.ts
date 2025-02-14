@@ -23,7 +23,7 @@ export const emailRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
         try {
             const toEmail = ctx.user.email!
-            console.log(toEmail)
+            //console.log(toEmail)
             await resend.emails.send({
                 to: 'talhanadeem1826@gmail.com',
                 react: React.createElement(Email, {
@@ -38,8 +38,8 @@ export const emailRouter = createTRPCRouter({
                 subject: "Meeting Schedul Details",
             })
                   } catch (error) {
-                    console.log('error in sending email')
-                    console.log(error)
+                    //console.log('error in sending email')
+                    //console.log(error)
                   }
         
     }),

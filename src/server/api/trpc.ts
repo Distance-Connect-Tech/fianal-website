@@ -12,7 +12,6 @@ import { ZodError } from "zod";
 
 import { db } from "@/server/db";
 import { auth0 } from "@/lib/auth0";
-import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { limiters } from "@/lib/rateLimit";
 
 /**
@@ -28,14 +27,9 @@ import { limiters } from "@/lib/rateLimit";
  * @see https://trpc.io/docs/server/context
  * 
  */
-export const createTRPCContext = async (opts: CreateNextContextOptions) => {
-  const { req, res } = opts;
-  const ip = Array.isArray(req?.headers["x-forwarded-for"])
-    ? req?.headers["x-forwarded-for"][0]
-    : req?.headers["x-forwarded-for"]?.split(",")[0] || req?.socket?.remoteAddress;
-
+export const createTRPCContext = async (opts: { headers: Headers }) => {
+  
   return {
-    ip,
     db,
     ...opts,
   };
@@ -109,13 +103,13 @@ const rateLimiter = t.middleware(async ({ ctx, next }) => {
  
  
   if (user?.sub) {
-    const localLimit = await limiters.local.limit(`user:${user.sub}`, 10000, 5);
-    if (!localLimit.success) {
-      throw new TRPCError({ 
-        code: "TOO_MANY_REQUESTS",
-        message: `Local limit exceeded. Try again in ${Math.ceil(localLimit.pending/1000)}s`
-      });
-    }
+    // const localLimit = await limiters.local.limit(`user:${user.sub}`, 10000, 5);
+    // if (!localLimit.success) {
+    //   throw new TRPCError({ 
+    //     code: "TOO_MANY_REQUESTS",
+    //     message: `Local limit exceeded. Try again in ${Math.ceil(localLimit.pending/1000)}s`
+    //   });
+    // }
 
   const globalLimit = await limiters.global.limit(`user:${user.sub}`);
   if (!globalLimit.success) {
@@ -145,45 +139,12 @@ const rateLimiter = t.middleware(async ({ ctx, next }) => {
 });
 
 
-const anonymousRatelimitMiddleware = t.middleware(async ({ ctx, next }) => {
-  // // Anonymous user (IP-based)
-  // if (ctx.ip) {
-  //   const { success } = await anonymousRatelimit.limit(`ip:${ctx?.ip!}`);
-  //   if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
-  //   return next();
-  // }
-  // // Fallback for missing IP (unlikely in production)
-  // throw new TRPCError({ code: "BAD_REQUEST" });
+const anonymousRatelimitMiddleware = t.middleware(async ({ next }) => {
+  
   return next();
 });
 
-const isAuthenticated = t.middleware(async ({ next, ctx }) => {
-  const session = await auth0.getSession();
- const user = session?.user;
-//  console.log("--------------------" ,user)
- 
- if (!user) {
-   throw new TRPCError({
-     code: 'UNAUTHORIZED',
-     message: 'You must be logged in to access this resource',
-    });
-  }
-  
-  const dbUser = await ctx.db.user.findUnique({
-    where: { kindeId: user?.sub },
-  });
 
-  // console.log("===========" , dbUser)
-  
-
-  return next({
-    ctx: {
-      ...ctx,
-      user,
-      dbUser,
-    },
-  });
-});
 
 
 

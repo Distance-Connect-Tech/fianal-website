@@ -19,7 +19,6 @@ type MeetingEvent={
     updatedAt: Date;
     eventName: string;
     duration: number;
-    meetUrl: string;
     mentorUserId: string;
 }
 function MeetingEventList() {
@@ -49,7 +48,7 @@ function MeetingEventList() {
     }
 
     const onCopyClickHandler=(event : MeetingEvent)=>{
-        const meetingEventUrl=process.env.NEXT_PUBLIC_BASE_URL+'/'+event.mentorUserId+'/'+event.id
+        const meetingEventUrl= process.env.NODE_ENV === "development" ? "http://localhost:3000" +'/'+event.mentorUserId+'/'+event.id : process.env.NEXT_PUBLIC_BASE_URL+'/'+event.mentorUserId+'/'+event.id
         navigator.clipboard.writeText(meetingEventUrl);
         toast('Copied to Clicpboard')
     }
@@ -72,7 +71,6 @@ function MeetingEventList() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           
-                            <DropdownMenuItem className="flex gap-2"> <Pen/> Edit</DropdownMenuItem>
                             <DropdownMenuItem className="flex gap-2"
                             onClick={()=>onDeleteMeetingEvent(event)}
                             > <Trash/> Delete</DropdownMenuItem>

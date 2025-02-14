@@ -11,6 +11,21 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+      AUTH0_SECRET: z.string(),
+      APP_BASE_URL: z.string().url(),
+      AUTH0_DOMAIN: z.string(),
+      AUTH0_CLIENT_ID: z.string(),
+      AUTH0_CLIENT_SECRET: z.string(),
+      GOOGLE_SERVICE_ACCOUNT_EMAIL: z.string(),
+      GOOGLE_PRIVATE_KEY: z.string(),
+      ABLY_API_KEY: z.string(),
+      GCP_PROJECT_ID: z.string(),
+      GCP_CHAT_IMAGE_BUCKET_NAME: z.string(),
+      GCP_CLIENT_EMAIL: z.string(),
+      GCP_PRIVATE_KEY: z.string(),
+      UPSTASH_REDIS_REST_URL: z.string().url(),
+      UPSTASH_REDIS_REST_TOKEN: z.string(),
+      SKIP_ENV_VALIDATION: z.number(),
   },
 
   /**
@@ -20,6 +35,7 @@ export const env = createEnv({
    */
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_BASE_URL : z.string().url(),
   },
 
   /**
@@ -29,7 +45,22 @@ export const env = createEnv({
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+    AUTH0_SECRET: process.env.AUTH0_SECRET,
+    APP_BASE_URL: process.env.APP_BASE_URL,
+    AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
+    AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
+    AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,
+    GOOGLE_SERVICE_ACCOUNT_EMAIL: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+    GOOGLE_PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY,
+    ABLY_API_KEY: process.env.ABLY_API_KEY,
+    GCP_PROJECT_ID: process.env.GCP_PROJECT_ID,
+    GCP_CLIENT_EMAIL: process.env.GCP_CLIENT_EMAIL,
+    GCP_CHAT_IMAGE_BUCKET_NAME: process.env.GCP_CHAT_IMAGE_BUCKET_NAME,
+    GCP_PRIVATE_KEY: process.env.GCP_PRIVATE_KEY,
+    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+    SKIP_ENV_VALIDATION: process.env.SKIP_ENV_VALIDATION,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

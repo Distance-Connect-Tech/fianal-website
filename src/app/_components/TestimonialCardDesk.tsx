@@ -7,7 +7,7 @@ const TestimonialCardDesk = () => {
       <div className="flex items-center mb-4">
         <div className="flex space-x-1 text-blue-700">
           {[...Array(5)].map((_, i) => (
-            <img src='/testStar.svg' key={i} className="w-5 h-5 fill-current"/>
+            <img alt='star' src='/testStar.svg' key={i} className="w-5 h-5 fill-current"/>
           ))}
         </div>
       </div>

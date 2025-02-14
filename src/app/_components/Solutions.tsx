@@ -734,7 +734,7 @@ const Solutions = () => {
           Become a Mentor
           </div>
           <div className="font-inter text-[16px] font-normal leading-[125%] text-[#3D568F]">
-          Share your expertise and make a difference in someone's career journey. Join our community of mentors.
+          Share your expertise and make a difference in someone&apos;s career journey. Join our community of mentors.
 
           </div>
           <div className="flex flex-col gap-2">

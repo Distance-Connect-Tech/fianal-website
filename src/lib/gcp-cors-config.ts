@@ -1,7 +1,7 @@
 import {storage} from './gcp-storage';
 
 export async function configureCORS() {
-  const bucketName = process.env.GCP_BUCKET_NAME!;
+  const bucketName = "chat-image-storage";
 
   await storage.bucket(bucketName).setCorsConfiguration([
     {
@@ -20,7 +20,7 @@ export async function configureCORS() {
     }
   ]);
 
-  console.log(`✅ CORS configured for bucket ${bucketName}`);
+  //console.log(`✅ CORS configured for bucket ${bucketName}`);
 }
 
 // Run only when needed (not in production runtime!)

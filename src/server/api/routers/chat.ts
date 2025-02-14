@@ -6,12 +6,12 @@ import sharp from 'sharp';
 import { v4 as uuidv4 } from 'uuid'
 
 
-const bucket = storage.bucket(process.env.GCP_CHAT_IMAGE_BUCKET_NAME!)
+const bucket = storage.bucket("chat-image-storage")
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 const getSignedUrl = async (path: string) => {
-  const [url] = await storage.bucket(process.env.GCP_CHAT_IMAGE_BUCKET_NAME!)
+  const [url] = await storage.bucket("chat-image-storage")
     .file(path)
     .getSignedUrl({
       version: 'v4',
@@ -53,7 +53,7 @@ export const chatRouter = createTRPCRouter({
     }
  
 
-    var imagePath = null;
+    let imagePath = null;
     // Upload the image to GCP
     if (file) {
       const base64Data = file.split(',')[1];
@@ -166,7 +166,7 @@ export const chatRouter = createTRPCRouter({
             const signedUrl = await getSignedUrl(message?.imagePath!);
             return { ...message, imageUrl: signedUrl };
           }
-          // console.log("message", message)
+          // //console.log("message", message)
           return message;
         })
       );

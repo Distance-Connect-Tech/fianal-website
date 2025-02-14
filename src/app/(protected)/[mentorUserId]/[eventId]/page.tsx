@@ -3,7 +3,9 @@ import MeetingTimeDateSelection from '../_components/MeetingTimeDateSelection'
 import { api } from '@/trpc/server';
 import { db } from '@/server/db';
 
-async function SharedMeetingEvent({params }: {params: {mentorUserId: string, eventId: string}}) {
+type Params = Promise<{ mentorUserId: string, eventId: string }>
+
+async function SharedMeetingEvent({params }: {params: Params}) {
   
   const { mentorUserId, eventId } = await params;
 

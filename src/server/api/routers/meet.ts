@@ -12,8 +12,8 @@ export const meetRouter = createTRPCRouter({
     
     }))
     .mutation(async ({ input }) => {
-      // console.log("--------------------------------------")
-      // console.log(input.dateTime)
+      // //console.log("--------------------------------------")
+      // //console.log(input.dateTime)
       try {
         if (!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
           throw new Error('Missing Google service account credentials');
@@ -64,7 +64,7 @@ export const meetRouter = createTRPCRouter({
           requestBody: event,
           conferenceDataVersion: 1,
         });
-        // console.log("Response", response)
+        // //console.log("Response", response)
         // Return the Google Meet link
         return { meetLink: response.data.hangoutLink || '' };
 

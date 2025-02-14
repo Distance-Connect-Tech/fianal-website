@@ -52,8 +52,8 @@ const formSchema = z.object({
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
   companyName: z.string().min(2, "Current company is required"),
   jobTitle: z.string().min(2, "Job title is required"),
-  experience : z.string().min(2, "Experience is required"),
-  industry : z.string().min(2, "Industry is required"),
+  experience: z.string().min(2, "Experience is required"),
+  industry: z.string().min(2, "Industry is required"),
   pinCode: z.string().min(2, "Pincode is required"),
   state: z.string().min(2, "State is required"),
   role: z.string().min(2, "Role is required"),
@@ -62,19 +62,24 @@ const formSchema = z.object({
     .min(1, "Please select at least one hiring field"),
 });
 
-export default function WorkingForm({user} : {user : {firstName : string, lastName : string, }}) {
+export default function WorkingForm({
+  user,
+}: {
+  user: { firstName: string; lastName: string };
+}) {
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
   const [commandOpen, setCommandOpen] = useState(false);
 
-    const router = useRouter()
-    const createStudentUpdateUser = api.student.createStudentUpdateUser.useMutation({
-        onSuccess: () => {
-          console.log("Student created successfully")
-        },
-        onError: (error) => {
-          console.error(error)
-        },
-    })
+  const router = useRouter();
+  const createStudentUpdateUser =
+    api.student.createStudentUpdateUser.useMutation({
+      onSuccess: () => {
+        //console.log("Student created successfully")
+      },
+      onError: (error) => {
+        console.error(error);
+      },
+    });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -82,9 +87,9 @@ export default function WorkingForm({user} : {user : {firstName : string, lastNa
       firstName: user.firstName,
       lastName: user.lastName,
       companyName: "",
-        jobTitle: "",
-        experience: "",
-        industry: "",
+      jobTitle: "",
+      experience: "",
+      industry: "",
       pinCode: "",
       state: "",
       role: "STUDENT",
@@ -92,33 +97,32 @@ export default function WorkingForm({user} : {user : {firstName : string, lastNa
     },
   });
   function onSubmit(input: z.infer<typeof formSchema>) {
-    const role: "STUDENT" = "STUDENT"
-    const studentRole : "WORKING" = "WORKING"
-    const studentUserData = { 
-      studentRole : studentRole,
-      institutionName : "",
-              pinCode : Number(input.pinCode),
-              state : input.state,
-              interestFields : input.interstFields,
-              companyName : input.companyName,
-              jobTitle : input.jobTitle,
-              experience : input.experience,
-              industry : input.industry,
-              courseSpecialization : "",
-              role : role,
-              isRegistered : true,
-              avatarUrl : "https://i.sstatic.net/l60Hf.png",
-              name : input.firstName + " " + input.lastName,
+    const role: "STUDENT" = "STUDENT";
+    const studentRole: "WORKING" = "WORKING";
+    const studentUserData = {
+      studentRole: studentRole,
+      institutionName: "",
+      pinCode: Number(input.pinCode),
+      state: input.state,
+      interestFields: input.interstFields,
+      companyName: input.companyName,
+      jobTitle: input.jobTitle,
+      experience: input.experience,
+      industry: input.industry,
+      courseSpecialization: "",
+      role: role,
+      isRegistered: true,
+      avatarUrl: "https://i.sstatic.net/l60Hf.png",
+      name: input.firstName + " " + input.lastName,
+    };
 
-     }  
-
-     console.log(studentUserData)
-     try {
-       createStudentUpdateUser.mutate(studentUserData)
-       router.push("/student-dashboard") 
-     } catch (error) {
-       console.error(error)
-     } 
+    //console.log(studentUserData)
+    try {
+      createStudentUpdateUser.mutate(studentUserData);
+      router.push("/student-dashboard");
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   const toggleField = (field: string) => {
@@ -210,31 +214,34 @@ export default function WorkingForm({user} : {user : {firstName : string, lastNa
                 )}
               />
 
-                <FormField
-                    control={form.control}
-                    name="jobTitle"
-                    render={({ field }) => (
-                    <FormItem className="relative flex flex-col">
-                        <FormLabel className="absolute left-[10px] top-[0px] bg-white px-1 font-inter text-[14px] font-normal leading-[16px] text-[#8A8A8A] peer-focus:text-black">
-                        Job Title
-                        </FormLabel>
-                        <FormControl className="floating-input peer w-[300px]">
-                        <Input placeholder={""} type="text" {...field} required />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                    )}
-                />
-                 <FormField
+              <FormField
+                control={form.control}
+                name="jobTitle"
+                render={({ field }) => (
+                  <FormItem className="relative flex flex-col">
+                    <FormLabel className="absolute left-[10px] top-[0px] bg-white px-1 font-inter text-[14px] font-normal leading-[16px] text-[#8A8A8A] peer-focus:text-black">
+                      Job Title
+                    </FormLabel>
+                    <FormControl className="floating-input peer w-[300px]">
+                      <Input placeholder={""} type="text" {...field} required />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
                 control={form.control}
                 name="experience"
                 render={({ field }) => (
-                    <FormItem className="flex flex-col  relative">
-                     <FormLabel  className="top-[0px] px-1 text-[#8A8A8A] font-inter text-[14px] font-normal leading-[16px] left-[10px] peer-focus:text-black bg-white  absolute ">
-                    Experience
-                </FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl className="floating-input text-[#8A8A8A]  peer w-[300px]">
+                  <FormItem className="relative flex flex-col">
+                    <FormLabel className="absolute left-[10px] top-[0px] bg-white px-1 font-inter text-[14px] font-normal leading-[16px] text-[#8A8A8A] peer-focus:text-black">
+                      Experience
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl className="floating-input peer w-[300px] text-[#8A8A8A]">
                         <SelectTrigger>
                           <SelectValue placeholder="" />
                         </SelectTrigger>
@@ -251,22 +258,21 @@ export default function WorkingForm({user} : {user : {firstName : string, lastNa
                 )}
               />
 
-                <FormField
-                    control={form.control}
-                    name="industry"
-                    render={({ field }) => (
-                    <FormItem className="relative flex flex-col">
-                        <FormLabel className="absolute left-[10px] top-[0px] bg-white px-1 font-inter text-[14px] font-normal leading-[16px] text-[#8A8A8A] peer-focus:text-black">
-                        Industry
-                        </FormLabel>
-                        <FormControl className="floating-input peer w-[300px] text-[#8A8A8A]">
-                        <Input placeholder="" type="text" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                    )}
-                />
-
+              <FormField
+                control={form.control}
+                name="industry"
+                render={({ field }) => (
+                  <FormItem className="relative flex flex-col">
+                    <FormLabel className="absolute left-[10px] top-[0px] bg-white px-1 font-inter text-[14px] font-normal leading-[16px] text-[#8A8A8A] peer-focus:text-black">
+                      Industry
+                    </FormLabel>
+                    <FormControl className="floating-input peer w-[300px] text-[#8A8A8A]">
+                      <Input placeholder="" type="text" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}
@@ -295,7 +301,7 @@ export default function WorkingForm({user} : {user : {firstName : string, lastNa
                 render={({ field }) => (
                   <FormItem className="relative flex flex-col">
                     <FormLabel className="absolute left-[10px] top-[0px] bg-white px-1 font-inter text-[14px] font-normal leading-[16px] text-[#8A8A8A] peer-focus:text-black">
-                     State
+                      State
                     </FormLabel>
                     <FormControl className="floating-input peer w-[300px] text-[#8A8A8A]">
                       <Input placeholder="" type="text" {...field} />
@@ -304,7 +310,6 @@ export default function WorkingForm({user} : {user : {firstName : string, lastNa
                   </FormItem>
                 )}
               />
-              
             </div>
             <FormField
               control={form.control}

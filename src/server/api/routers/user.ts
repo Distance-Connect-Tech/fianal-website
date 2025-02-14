@@ -13,7 +13,7 @@ export const userRouter = createTRPCRouter({
       avatarUrl : z.string().url().optional(),
      }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.user.create({
+      return ctx?.db?.user.create({
         data: {
           kindeId : input.kindeId,
           name: input.name,
@@ -40,14 +40,23 @@ export const userRouter = createTRPCRouter({
 
   getUserRole: protectedProcedure
   .query(async ({ ctx }) => {
-    return ctx.dbUser?.role;
+    return ctx?.dbUser?.role;
   }
   
   ),
+
+
   deleteUser: protectedProcedure
+  
   .mutation(async ({ ctx }) => {
+
+
+    if (!ctx.user) {
+      throw new Error("User not authenticated");
+    }
+
     return ctx.db.user.delete({
-      where: { id: ctx.user.id },
+      where: { id: ctx?.user?.id as string },
     });
   }
   ),
@@ -57,7 +66,7 @@ export const userRouter = createTRPCRouter({
     id: z.string(),
   }))
   .query(async ({ ctx, input }) => {
-    return ctx.db.user.findUnique({
+    return ctx?.db?.user.findUnique({
       where: { id: input.id },
     });
   }
@@ -68,8 +77,8 @@ export const userRouter = createTRPCRouter({
     kindeId: z.string(),
   }))
   .query(async ({ ctx, input }) => {
-    console.log("input")
-    return ctx.db.user.findUnique({
+    //console.log("input")
+    return ctx?.db?.user.findUnique({
       where: { kindeId: input.kindeId },
     });
   }

@@ -31,7 +31,7 @@ export default function SignUpPage() {
 
         <div className="max-w-md mx-auto w-full">
           <h1 className="text-black font-inter text-[32px] font-bold leading-[36px] mb-8">
-            Let's get you started
+            Let&apos;s get you started
           </h1>
 
           <form className="space-y-6">

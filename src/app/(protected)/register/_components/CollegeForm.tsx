@@ -60,19 +60,24 @@ const formSchema = z.object({
     .min(1, "Please select at least one hiring field"),
 });
 
-export default function CollegeForm({ user }: { user: { firstName: string; lastName: string } }) {
+export default function CollegeForm({
+  user,
+}: {
+  user: { firstName: string; lastName: string };
+}) {
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
   const [commandOpen, setCommandOpen] = useState(false);
 
-    const router = useRouter()
-    const createStudentUpdateUser = api.student.createStudentUpdateUser.useMutation({
-        onSuccess: () => {
-          console.log("Student created successfully")
-        },
-        onError: (error) => {
-          console.error(error)
-        },
-    })
+  const router = useRouter();
+  const createStudentUpdateUser =
+    api.student.createStudentUpdateUser.useMutation({
+      onSuccess: () => {
+        //console.log("Student created successfully")
+      },
+      onError: (error) => {
+        console.error(error);
+      },
+    });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -88,33 +93,32 @@ export default function CollegeForm({ user }: { user: { firstName: string; lastN
     },
   });
 
-   function onSubmit(input: z.infer<typeof formSchema>) {
-     const role: "STUDENT" = "STUDENT"
-     const studentRole : "COLLEGE" = "COLLEGE"
-     const studentUserData = { 
-       studentRole : studentRole,
-       institutionName : input.institutionName,
-               pinCode : Number(input.pinCode),
-               state : input.state,
-               interestFields : input.interstFields,
-               companyName : "",
-               jobTitle : "",
-               experience : "",
-               industry : "",
-               courseSpecialization : input.courseSpecialization,
-               role : role,
-               isRegistered : true,
-               avatarUrl : "",
-               name : input.firstName + " " + input.lastName,
- 
-      } 
-      try {
-        createStudentUpdateUser.mutate(studentUserData)
-        router.push("/student-dashboard") 
-      } catch (error) {
-        console.error(error)
-      } 
+  function onSubmit(input: z.infer<typeof formSchema>) {
+    const role: "STUDENT" = "STUDENT";
+    const studentRole: "COLLEGE" = "COLLEGE";
+    const studentUserData = {
+      studentRole: studentRole,
+      institutionName: input.institutionName,
+      pinCode: Number(input.pinCode),
+      state: input.state,
+      interestFields: input.interstFields,
+      companyName: "",
+      jobTitle: "",
+      experience: "",
+      industry: "",
+      courseSpecialization: input.courseSpecialization,
+      role: role,
+      isRegistered: true,
+      avatarUrl: "",
+      name: input.firstName + " " + input.lastName,
+    };
+    try {
+      createStudentUpdateUser.mutate(studentUserData);
+      router.push("/student-dashboard");
+    } catch (error) {
+      console.error(error);
     }
+  }
 
   const toggleField = (field: string) => {
     setSelectedFields((current) => {

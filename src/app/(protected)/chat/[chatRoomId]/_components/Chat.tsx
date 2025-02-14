@@ -33,7 +33,8 @@ export default function Chat({
 
   const sendMessage = api.chat.sendMessage.useMutation({
     onSuccess : async() => {
-    
+      setMessage('');
+      setImagePreview(null);
     }
   });
 
