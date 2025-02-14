@@ -97,7 +97,7 @@ const  Navbar = ({loggedId} : {loggedId: boolean}) => {
 
     <div
       className={`w-[80%] z-[200] hidden lg:flex left-[50%] translate-x-[-50%] items-center m-auto  h-[68px] rounded-[50px] bg-[#9FBAF1] justify-between pr-6 pl-4 fixed transition-transform duration-300 ${
-        showNavbar ? ' transform translate-y-[60px] ' : 'transform -translate-y-[100px] '
+        showNavbar ? ' transform translate-y-[30px] ' : 'transform -translate-y-[100px] '
       }`}
     >
       <div className="flex gap-2 justify-center items-center">
