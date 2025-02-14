@@ -134,7 +134,8 @@ export default function MentorForm({
 
     try {
       createMentorUpdateUser.mutate(mentorUserData);
-      router.push("/mentor-dashboard");
+      // router.push("/mentor-dashboard");
+      router.push("/post-register");
     } catch (error) {
       console.error(error);
     }

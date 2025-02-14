@@ -119,7 +119,9 @@ export default function WorkingForm({
     //console.log(studentUserData)
     try {
       createStudentUpdateUser.mutate(studentUserData);
-      router.push("/student-dashboard");
+      // router.push("/student-dashboard");
+      router.push("/post-register");
+
     } catch (error) {
       console.error(error);
     }

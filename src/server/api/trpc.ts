@@ -103,13 +103,13 @@ const rateLimiter = t.middleware(async ({ ctx, next }) => {
  
  
   if (user?.sub) {
-    // const localLimit = await limiters.local.limit(`user:${user.sub}`, 10000, 5);
-    // if (!localLimit.success) {
-    //   throw new TRPCError({ 
-    //     code: "TOO_MANY_REQUESTS",
-    //     message: `Local limit exceeded. Try again in ${Math.ceil(localLimit.pending/1000)}s`
-    //   });
-    // }
+    const localLimit = await limiters.local.limit(`user:${user.sub}`, 10000, 5);
+    if (!localLimit.success) {
+      throw new TRPCError({ 
+        code: "TOO_MANY_REQUESTS",
+        message: `Local limit exceeded. Try again in ${Math.ceil(localLimit.pending/1000)}s`
+      });
+    }
 
   const globalLimit = await limiters.global.limit(`user:${user.sub}`);
   if (!globalLimit.success) {

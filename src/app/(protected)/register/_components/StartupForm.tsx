@@ -103,7 +103,9 @@ export default function StartupForm() {
 
     try {
       createStudentUpdateUser.mutate(startupUserData);
-      router.push("/startup-dashboard");
+      // router.push("/startup-dashboard");
+      router.push("/post-register");
+
     } catch (error) {
       console.error(error);
     }

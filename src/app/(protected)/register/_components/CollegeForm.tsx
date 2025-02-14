@@ -114,7 +114,9 @@ export default function CollegeForm({
     };
     try {
       createStudentUpdateUser.mutate(studentUserData);
-      router.push("/student-dashboard");
+      // router.push("/student-dashboard");
+      router.push("/post-register");
+
     } catch (error) {
       console.error(error);
     }

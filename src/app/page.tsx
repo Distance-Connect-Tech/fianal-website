@@ -25,12 +25,12 @@ export default async function Home() {
       if(user){
 
       const dbUser  = await api.user.checkUser({ kindeId: user?.sub! })
-      console.log("DB User", dbUser)
+      //console.log("DB User", dbUser)
       
       if(dbUser){ 
         loggedId = true; 
         if(!dbUser.isRegistered){
-          console.log("User is not registered")
+          //console.log("User is not registered")
           return redirect("/register");
         }
       }else{

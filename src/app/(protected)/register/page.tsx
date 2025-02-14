@@ -17,13 +17,16 @@ export default async function RegisterPage() {
   //console.log("--------------------- ",dbUser)
   if (user && dbUser?.isRegistered) {
     if (dbUser?.role === "STUDENT") {
-      return redirect("/student-dashboard");
+      // return redirect("/student-dashboard");
+      return redirect("/post-register");
     }
     if (dbUser.role === "MENTOR") {
-      return redirect("/mentor-dashboard");
+      // return redirect("/mentor-dashboard");
+      return redirect("/post-register");
     }
     if (dbUser.role === "STARTUP") {
-      return redirect("/startup-dashboard");
+      // return redirect("/startup-dashboard");
+      return redirect("/post-register");
     }
     return redirect("/");
   }
