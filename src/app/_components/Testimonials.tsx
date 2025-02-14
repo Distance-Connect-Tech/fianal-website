@@ -38,7 +38,7 @@ const Testimonials = () => {
     </Carousel>
             </div>
         </div>
-<div className='hidden lg:block  py-10 border-y-[0.5px] border-[#3D568F]'>
+<div className='hidden lg:block   py-32 border-y-[0.5px] border-[#3D568F]'>
 
         <div className='  w-[80%] m-auto'>
             <div className='text-[#27417D] text-center font-inter text-[36px] font-extrabold leading-[40px] tracking-normal'>
@@ -48,7 +48,7 @@ const Testimonials = () => {
             Lorem ipsum dolor sit amet consectetur adipiscing eli mattis sit phasellus mollis sit aliquam sit nullam.
             </div>
             <div className='mt-12'>
-            <Carousel className=" m-auto ">
+            <Carousel className=" m-auto pl-12 ">
       <CarouselContent className="">
         <CarouselItem  className="md:basis-1/2 xl:basis-1/3  ">
                 <TestimonialCardDesk/>
