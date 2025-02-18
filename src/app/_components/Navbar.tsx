@@ -13,6 +13,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import Link from 'next/link';
 const  Navbar = ({loggedId} : {loggedId: boolean}) => {
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -64,7 +65,7 @@ const  Navbar = ({loggedId} : {loggedId: boolean}) => {
           <div className='text-[#5D5A88] mt-2 w-full text-[18px] font-normal leading-[18px] '>Blog</div>
           <div className='text-[#5D5A88] mt-2 w-full text-[18px] font-normal leading-[18px] '>Use Cases</div>
           <div className='text-[#5D5A88] mt-2 w-full text-[18px] font-normal leading-[18px] '>Pricing</div>
-          <div className='text-[#5D5A88] mt-2 w-full text-[18px] font-normal leading-[18px] '>Contact</div>
+          <Link href="/contact-us" className='text-[#5D5A88] mt-2 w-full text-[18px] font-normal leading-[18px] '>Contact</Link>
         </div>
         <div className='flex flex-col gap-16'>
           <div className='flex flex-col gap-6'>
@@ -110,7 +111,7 @@ const  Navbar = ({loggedId} : {loggedId: boolean}) => {
         <div className="cursor-pointer">Solutions</div>
         <div>Resources</div>
         <div>Pricing</div>
-        <div>Contact Us</div>
+        <Link href="/contact-us" className='cursor-pointer'>Contact Us</Link>
       </div>
       {!loggedId ? 
         <div className="flex gap-4 justify-center items-center">
