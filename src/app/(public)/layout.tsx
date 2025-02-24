@@ -7,6 +7,8 @@ import { api } from "@/trpc/server";
 import { auth0 } from "@/lib/auth0";
 import { redirect } from "next/navigation";
 import Footer from "../_components/Footer";
+import client from "@/lib/contentful";
+import { BlogProvider } from "@/contexts/BlogContext";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -26,12 +28,26 @@ export default async function RootLayout({
     loggedIn = true;  
   }
 
+
+  
+    // Fetch blogs once on the server
+    const response = await client.getEntries({ content_type: "pageBlogPost" });
+    const initialBlogs = response?.items?.sort(
+      (a, b) =>
+        new Date(b?.sys?.updatedAt).getTime() - new Date(a?.sys?.updatedAt).getTime(),
+    );
+    console.log("initialBlogs")
+
+
   return (
     <html lang="en" className={GeistSans.variable}>
       <body>
-        <Navbar loggedId={loggedIn} />
+
+
+        <Navbar blogs={initialBlogs} loggedId={loggedIn} />
         {children}
       <Footer/>
+   
       </body>
     </html>
   );

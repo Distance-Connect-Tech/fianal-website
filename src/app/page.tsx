@@ -13,6 +13,7 @@ import Potential from "./_components/Potential";
 import Testimonials from "./_components/Testimonials";
 import Faq from "./_components/Faq";
 import Footer from "./_components/Footer";
+import client from "@/lib/contentful";
 
 export default async function Home() {
 
@@ -42,7 +43,12 @@ export default async function Home() {
 
 
 
-    
+    const response = await client.getEntries({ content_type: "pageBlogPost" });
+    const initialBlogs = response?.items?.sort(
+      (a, b) =>
+        new Date(b?.sys?.updatedAt).getTime() - new Date(a?.sys?.updatedAt).getTime(),
+    );
+    console.log("initialBlogs")
 
 
     return (
@@ -52,7 +58,7 @@ export default async function Home() {
 
       <div className="w-full flex justify-center items-center relative">
 
-      <Navbar loggedId={loggedId}/>
+      <Navbar blogs={initialBlogs} loggedId={loggedId}/>
       </div>
 
       <HeroSection/>

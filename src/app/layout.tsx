@@ -10,9 +10,14 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
+interface LayoutProps {
+  children: React.ReactNode;
+  params: { locale: string };
+}
+
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}:LayoutProps) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>

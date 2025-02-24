@@ -5,19 +5,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { api } from "@/trpc/react";
 import Link from "next/link";
 import React from "react";
-import { use } from 'react'
+import { use } from "react";
 
-type Params = Promise<{ mentorUserId: string }>
+type Params = Promise<{ mentorUserId: string }>;
 
-const page = async ({ params }: { params: Params}) => {
-  const { mentorUserId } =  use(params);
+const page = async ({ params }: { params: Params }) => {
+  const { mentorUserId } = use(params);
 
   const { data: chatRoom } =
     api.chatRoom.getChatRoomByMentorAndStudentId.useQuery({ mentorUserId });
-  const {
-    data: mentor,
-    isLoading,
-  } = api.mentor.getMentorByUserId.useQuery({ userId: mentorUserId });
+  const { data: mentor, isLoading } = api.mentor.getMentorByUserId.useQuery({
+    userId: mentorUserId,
+  });
   const createChatRoomMutation = api.chatRoom.createChatRoom.useMutation({
     onSuccess: () => {
       //console.log("Chat Room Created")
