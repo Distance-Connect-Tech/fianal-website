@@ -78,13 +78,63 @@ export const studentRouter = createTRPCRouter({
   // }
   // ),
 
-  // getStudent: protectedProcedure
-  // .query(async ({ ctx }) => {
-  //   return ctx.db.student.findUnique({
-  //     where: { userId: ctx?.dbUser?.id },
-  //   });
-  // }
-  // ),
+  getStudentOnly: protectedProcedure
+  .query(async ({ ctx }) => {
+    return ctx.db.student.findUnique({
+      where: { userId: ctx?.dbUser?.id },
+    });
+  }
+  ),
+
+  updateStudent: protectedProcedure
+  .input(z.object({
+    studentRole: z.enum(["HIGHSCHOOL", "COLLEGE", "WORKING"]),
+    institutionName : z.string(),
+    pinCode : z.number(),
+    interestFields : z.array(z.string()),
+    state : z.string(),
+
+    
+    linkedinUrl : z.string(),
+    courseSpecialization : z.string(),
+    companyName : z.string(),
+    jobTitle : z.string(),
+    experience : z.string(),
+    industry : z.string(),
+ 
+    studentName : z.string(),
+    
+    
+  }))
+  .mutation(async ({ ctx, input }) => {
+    return ctx.db.student.update({
+      where: { userId: ctx?.dbUser?.id },
+      data: input,
+    });
+  }
+  ),
+
+  getStudent: protectedProcedure
+  .query(async ({ ctx }) => {
+    return ctx.db.student.findUnique({
+      where: { userId: ctx?.dbUser?.id },
+      include: {
+        chatRooms: true,
+        scheduledMeetings: {
+          include: {
+            mentor: {
+              include: {
+                user: true,
+              
+              },
+            },
+          },
+        },
+        user: true,
+      },
+    });
+  }
+  ),
 
 
     

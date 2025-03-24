@@ -40,12 +40,8 @@ import {
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 
-const hiringFields = [
-  { label: "Python", value: "python" },
-  { label: "UX/UI", value: "uxui" },
-  { label: "Machine Learning", value: "machine-learning" },
-  { label: "Soft Skills", value: "soft-skills" },
-] as const;
+import {hiringFields} from "@/constants/hiringFirlds"
+
 
 const formSchema = z.object({
   firstName: z.string().min(2, {
@@ -77,6 +73,9 @@ const formSchema = z.object({
   }),
   hiringFields: z.array(z.string()).min(1, {
     message: "At least one hiring field is required",
+  }),
+  companyType: z.string().min(2, {
+    message: "Company type is required",
   }),
 });
 
@@ -111,6 +110,7 @@ export default function MentorForm({
       pinCode: "",
       state: "",
       role: "MENTOR",
+      companyType: "",
       hiringFields: [],
     },
   });
@@ -129,6 +129,7 @@ export default function MentorForm({
       role: role,
       hiringFields: selectedFields,
       isRegistered: true,
+      companyType: values?.companyType,
       avatarUrl: "https://i.sstatic.net/l60Hf.png",
     };
 
@@ -211,41 +212,8 @@ export default function MentorForm({
                   </FormItem>
                 )}
               />
-            </div>
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="currentCompany"
-                render={({ field }) => (
-                  <FormItem className="relative flex flex-col">
-                    <FormLabel className="absolute left-[10px] top-[0px] bg-white px-1 font-inter text-[14px] font-normal leading-[16px] text-[#8A8A8A] peer-focus:text-black">
-                      Current Company
-                    </FormLabel>
-                    <FormControl className="floating-input peer w-[300px]">
-                      <Input placeholder={""} type="text" {...field} required />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="jobTitle"
-                render={({ field }) => (
-                  <FormItem className="relative flex flex-col">
-                    <FormLabel className="absolute left-[10px] top-[0px] bg-white px-1 font-inter text-[14px] font-normal leading-[16px] text-[#8A8A8A] peer-focus:text-black">
-                      Job Title
-                    </FormLabel>
-                    <FormControl className="floating-input peer w-[300px] text-[#8A8A8A]">
-                      <Input placeholder="" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
+<FormField
                 control={form.control}
                 name="experience"
                 render={({ field }) => (
@@ -263,10 +231,10 @@ export default function MentorForm({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="1-3">1-3 years</SelectItem>
-                        <SelectItem value="4-6">4-6 years</SelectItem>
-                        <SelectItem value="7-10">7-10 years</SelectItem>
-                        <SelectItem value="10+">10+ years</SelectItem>
+                        <SelectItem value="0-2">0-2 years (Entry-Level)</SelectItem>
+                        <SelectItem value="3-5">3-5 years (Mid-Level)</SelectItem>
+                        <SelectItem value="6-10">6-10 years (Senior-Level)</SelectItem>
+                        <SelectItem value="10+">10+ years (Expert / Executive)</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -274,7 +242,7 @@ export default function MentorForm({
                 )}
               />
 
-              <FormField
+                <FormField
                 control={form.control}
                 name="industry"
                 render={({ field }) => (
@@ -282,14 +250,197 @@ export default function MentorForm({
                     <FormLabel className="absolute left-[10px] top-[0px] bg-white px-1 font-inter text-[14px] font-normal leading-[16px] text-[#8A8A8A] peer-focus:text-black">
                       Industry
                     </FormLabel>
-                    <FormControl className="floating-input peer w-[300px] text-[#8A8A8A]">
-                      <Input placeholder="" {...field} />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl className="floating-input peer w-[300px] text-[#8A8A8A]">
+                        <SelectTrigger>
+                          <SelectValue placeholder="" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Software Development">Software Development</SelectItem>
+                        <SelectItem value="Artificial Intelligence / Machine Learning">Artificial Intelligence / Machine Learning</SelectItem>
+                        <SelectItem value="Data Science & Analytics">Data Science & Analytics</SelectItem>
+                        <SelectItem value="Cloud Computing & DevOps">Cloud Computing & DevOps </SelectItem>
+                        <SelectItem value="Cybersecurity">Cybersecurity</SelectItem>
+                        <SelectItem value="Blockchain & Web3">Blockchain & Web3</SelectItem>
+                        <SelectItem value="IoT & Embedded Systems">IoT & Embedded Systems</SelectItem>
+                        <SelectItem value="UI/UX Design">UI/UX Design</SelectItem>
+                        <SelectItem value="Product Management">Product Management</SelectItem>
+                        <SelectItem value="Digital Marketing">Digital Marketing</SelectItem>
+                        <SelectItem value="Finance & Investment Banking">Finance & Investment Banking</SelectItem>    
+                        <SelectItem value="Consulting & Strategy">Consulting & Strategy</SelectItem>
+                        <SelectItem value="Mechanical & Automotive Engineering">Mechanical & Automotive Engineering</SelectItem>
+                        <SelectItem value="Civil & Construction Engineering">Civil & Construction Engineering</SelectItem>
+                        <SelectItem value="Electrical & Electronics Engineering">Electrical & Electronics Engineering</SelectItem>
+                        <SelectItem value="Biomedical & Healthcare Technology">Biomedical & Healthcare Technology</SelectItem>    
+
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
+            </div>
+
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <FormField
+                control={form.control}
+                name="companyType"
+                render={({ field }) => (
+                  <FormItem className="relative flex flex-col">
+                    <FormLabel className="absolute left-[10px] top-[0px] bg-white px-1 font-inter text-[14px] font-normal leading-[16px] text-[#8A8A8A] peer-focus:text-black">
+                      Company Type
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl className="floating-input peer w-[300px] text-[#8A8A8A]">
+                        <SelectTrigger>
+                          <SelectValue placeholder="" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="FAANG">FAANG (Facebook, Apple, Amazon, Netflix, Google)</SelectItem>
+                        <SelectItem value="Top Tech Companies">Top Tech Companies (Microsoft, Tesla, Adobe, IBM, Oracle, etc.)</SelectItem>
+                        <SelectItem value="Unicorn Startups">Unicorn Startups (Byju’s, Paytm, Zomato, etc.)</SelectItem>
+                        <SelectItem value="Consulting Firms">Consulting Firms (McKinsey, BCG, Bain, etc.)</SelectItem>
+                        <SelectItem value="Investment Banks & Financial Institutions">Investment Banks & Financial Institutions</SelectItem>
+                        <SelectItem value="Indian Startups & SMEs">Indian Startups & SMEs</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="currentCompany"
+                render={({ field }) => (
+                  <FormItem className="relative flex flex-col">
+                    <FormLabel className="absolute left-[10px] top-[0px] bg-white px-1 font-inter text-[14px] font-normal leading-[16px] text-[#8A8A8A] peer-focus:text-black">
+                      Company Name
+                    </FormLabel>
+                    <FormControl className="floating-input peer w-[300px]">
+                      <Input placeholder={""} type="text" {...field} required />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="jobTitle"
+                render={({ field }) => (
+                  <FormItem className="relative flex flex-col">
+                    <FormLabel className="absolute left-[10px] top-[0px] bg-white px-1 font-inter text-[14px] font-normal leading-[16px] text-[#8A8A8A] peer-focus:text-black">
+                      Job Role / Designation
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl className="floating-input peer w-[300px] text-[#8A8A8A]">
+                        <SelectTrigger>
+                          <SelectValue placeholder="" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Software Engineer / Developer">Software Engineer / Developer</SelectItem>
+                        <SelectItem value="Data Scientist / Data Analyst">Data Scientist / Data Analyst</SelectItem>
+                        <SelectItem value="Machine Learning Engineer">Machine Learning Engineer</SelectItem>
+                        <SelectItem value="Cloud Engineer / DevOps Engineer">Cloud Engineer / DevOps Engineer</SelectItem>
+                        <SelectItem value="Cybersecurity Analyst">Cybersecurity Analyst</SelectItem>
+                        <SelectItem value="UI/UX Designer">UI/UX Designer</SelectItem>
+                        <SelectItem value="Product Manager">Product Manager</SelectItem>
+                        <SelectItem value="Digital Marketing Specialist">Digital Marketing Specialist</SelectItem>
+                        <SelectItem value="Financial Analyst">Financial Analyst</SelectItem>
+                        <SelectItem value="Management Consultant">Management Consultant</SelectItem>
+                        <SelectItem value="Mechanical Engineer">Mechanical Engineer</SelectItem>
+                        <SelectItem value="Electrical Engineer">Electrical Engineer</SelectItem>
+                        <SelectItem value="Business Analyst">Business Analyst</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {field.value === "other" && (
+                      <FormControl className="mt-2">
+                        <Input placeholder="Please specify"  />
+                      </FormControl>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+<FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem className="relative flex flex-col">
+                    <FormLabel className="absolute left-[10px] top-[0px] bg-white px-1 font-inter text-[14px] font-normal leading-[16px] text-[#8A8A8A] peer-focus:text-black">
+                      State
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl className="floating-input peer w-[300px] text-[#8A8A8A]">
+                        <SelectTrigger>
+                          <SelectValue placeholder="" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        
+                        <SelectItem value="andaman-nicobar-islands">Andaman and Nicobar Islands</SelectItem>
+                          <SelectItem value="andhra-pradesh">Andhra Pradesh</SelectItem>
+                          <SelectItem value="arunachal-pradesh">Arunachal Pradesh</SelectItem>
+                          <SelectItem value="assam">Assam</SelectItem>
+                          <SelectItem value="bihar">Bihar</SelectItem>
+                          <SelectItem value="chandigarh">Chandigarh</SelectItem>
+                          <SelectItem value="chhattisgarh">Chhattisgarh</SelectItem>
+                          <SelectItem value="dadra-nagar-haveli-daman-diu">Dadra and Nagar Haveli and Daman and Diu</SelectItem>
+                          <SelectItem value="delhi">Delhi</SelectItem>
+                          <SelectItem value="goa">Goa</SelectItem>
+                          <SelectItem value="gujarat">Gujarat</SelectItem>
+                          <SelectItem value="haryana">Haryana</SelectItem>
+                          <SelectItem value="himachal-pradesh">Himachal Pradesh</SelectItem>
+                          <SelectItem value="jammu-kashmir">Jammu and Kashmir</SelectItem>
+                          <SelectItem value="jharkhand">Jharkhand</SelectItem>
+                          <SelectItem value="karnataka">Karnataka</SelectItem>
+                          <SelectItem value="kerala">Kerala</SelectItem>
+                          <SelectItem value="ladakh">Ladakh</SelectItem>
+                          <SelectItem value="lakshadweep">Lakshadweep</SelectItem>
+                          <SelectItem value="madhya-pradesh">Madhya Pradesh</SelectItem>
+                          <SelectItem value="maharashtra">Maharashtra</SelectItem>
+                          <SelectItem value="manipur">Manipur</SelectItem>
+                          <SelectItem value="meghalaya">Meghalaya</SelectItem>
+                          <SelectItem value="mizoram">Mizoram</SelectItem>
+                          <SelectItem value="nagaland">Nagaland</SelectItem>
+                          <SelectItem value="odisha">Odisha</SelectItem>
+                          <SelectItem value="puducherry">Puducherry</SelectItem>
+                          <SelectItem value="punjab">Punjab</SelectItem>
+                          <SelectItem value="rajasthan">Rajasthan</SelectItem>
+                          <SelectItem value="sikkim">Sikkim</SelectItem>
+                          <SelectItem value="tamil-nadu">Tamil Nadu</SelectItem>
+                          <SelectItem value="telangana">Telangana</SelectItem>
+                          <SelectItem value="tripura">Tripura</SelectItem>
+                          <SelectItem value="uttar-pradesh">Uttar Pradesh</SelectItem>
+                          <SelectItem value="uttarakhand">Uttarakhand</SelectItem>
+                          <SelectItem value="west-bengal">West Bengal</SelectItem>
+
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+            
               <FormField
                 control={form.control}
                 name="pinCode"
@@ -311,21 +462,7 @@ export default function MentorForm({
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="state"
-                render={({ field }) => (
-                  <FormItem className="relative flex flex-col">
-                    <FormLabel className="absolute left-[10px] top-[0px] bg-white px-1 font-inter text-[14px] font-normal leading-[16px] text-[#8A8A8A] peer-focus:text-black">
-                      State
-                    </FormLabel>
-                    <FormControl className="floating-input peer w-[300px] text-[#8A8A8A]">
-                      <Input placeholder="" type="text" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              
             </div>
             <FormField
               control={form.control}

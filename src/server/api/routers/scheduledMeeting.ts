@@ -14,7 +14,8 @@ export const scheduledMeetingsRouter = createTRPCRouter({
         duration : z.number(),
         meetUrl : z.string().url(),
         eventId : z.string(),
-        userNote : z.string()
+        userNote : z.string(),
+        eventName : z.string()
       
      }))
     .mutation(async ({ ctx, input }) => {
@@ -29,7 +30,8 @@ export const scheduledMeetingsRouter = createTRPCRouter({
             meetUrl : input.meetUrl,
             eventId : input.eventId,
             userNote : input.userNote,
-            studentUserId : ctx.dbUser!.id
+            studentUserId : ctx.dbUser!.id,
+            eventName : input.eventName
         }
       })
     }),
@@ -54,6 +56,9 @@ export const scheduledMeetingsRouter = createTRPCRouter({
         where: {
           mentorUserId: ctx.dbUser!.id
         },
+        include: {
+          student: true,
+        },
       });
     }),
 
@@ -64,8 +69,43 @@ export const scheduledMeetingsRouter = createTRPCRouter({
         where: {
           studentUserId: ctx.dbUser!.id
         },
+        include: {
+          mentor: true,
+        },
       });
     }),
 
- 
+    // New procedure to get scheduled meetings for the mentor dashboard
+    getMentorScheduledMeetings: protectedProcedure
+    .query(async ({ ctx }) => {
+      const meetings = await ctx.db.scheduledMeetings.findMany({
+        where: {
+          mentorUserId: ctx.dbUser!.id,
+          completed: false,
+        },
+        orderBy: {
+          selectedDate: 'asc',
+        },
+        include: {
+          student: true,
+        },
+        take: 3, // Limit to 3 most recent upcoming meetings
+      });
+
+      // Transform the data to match our ScheduledSessions component format
+      return meetings.map(meeting => {
+        const date = new Date(meeting.selectedDate);
+        const monthNames = ["January", "February", "March", "April", "May", "June", 
+                          "July", "August", "September", "October", "November", "December"];
+        
+        return {
+          id: meeting.id,
+          title: meeting.eventName,
+          description: meeting.userNote || `Meeting with ${meeting.student.studentName || 'Student'}`,
+          date: `${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()}`,
+          time: meeting.selectedTime,
+          meetUrl: meeting.meetUrl
+        };
+      });
+    }),
   })

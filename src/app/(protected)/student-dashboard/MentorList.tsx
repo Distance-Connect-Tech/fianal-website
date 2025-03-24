@@ -5,7 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 const MentorList = () => {
-  const { data, isError, isLoading } = api.mentor.getAllMentors.useQuery();
+  const { data, isError, isLoading } = api.mentor.getAllMentors.useQuery(
+    undefined,
+    {
+      // Reduce retries to avoid rate limit issues
+      retry: 1,
+      // Increase staleTime to reduce refetches
+      staleTime: 10 * 60 * 1000, // 10 minutes
+    },
+  );
 
   return (
     <div className="container mx-auto p-6">
@@ -26,8 +34,11 @@ const MentorList = () => {
           }));
 
           return (
-            <Card key={mentor.userId} className="mb-6 shadow hover:shadow-lg transition">
-              <CardHeader className="flex justify-between items-center">
+            <Card
+              key={mentor.userId}
+              className="mb-6 shadow transition hover:shadow-lg"
+            >
+              <CardHeader className="flex items-center justify-between">
                 <CardTitle className="text-xl font-bold">
                   <a
                     href={`/${mentor.userId}`}
@@ -40,23 +51,32 @@ const MentorList = () => {
               <CardContent>
                 <div className="mb-4">
                   <p className="text-gray-700">
-                    <span className="font-semibold">Job Title:</span> {mentor.jobTitle}
+                    <span className="font-semibold">Job Title:</span>{" "}
+                    {mentor.jobTitle}
                   </p>
                   <p className="text-gray-700">
-                    <span className="font-semibold">Company:</span> {mentor.currentCompany}
+                    <span className="font-semibold">Company:</span>{" "}
+                    {mentor.currentCompany}
                   </p>
                   <p className="text-gray-700">
-                    <span className="font-semibold">Experience:</span> {mentor.experience} years
+                    <span className="font-semibold">Experience:</span>{" "}
+                    {mentor.experience} years
                   </p>
                   <p className="text-gray-700">
-                    <span className="font-semibold">Industry:</span> {mentor.industry}
+                    <span className="font-semibold">Industry:</span>{" "}
+                    {mentor.industry}
                   </p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-800 mb-2">Meeting Events</h4>
+                  <h4 className="mb-2 font-semibold text-gray-800">
+                    Meeting Events
+                  </h4>
                   <div className="flex flex-wrap gap-2">
                     {events?.map((event) => (
-                      <Badge key={event.id} className="cursor-pointer bg-blue-500 text-white hover:bg-blue-600">
+                      <Badge
+                        key={event.id}
+                        className="cursor-pointer bg-blue-500 text-white hover:bg-blue-600"
+                      >
                         <a
                           target="_blank"
                           rel="noreferrer"

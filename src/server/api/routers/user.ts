@@ -30,6 +30,7 @@ export const userRouter = createTRPCRouter({
     role: z.enum(["USER", "STUDENT", "MENTOR", "STARTUP"]).optional(),
     isRegistered : z.boolean().optional(),
   }))
+  
   .mutation(async ({ ctx, input }) => {
     return ctx.db.user.update({
       where: { id: ctx?.dbUser?.id },
@@ -61,6 +62,12 @@ export const userRouter = createTRPCRouter({
   }
   ),
 
+  getMe: protectedProcedure
+  .query(async ({ ctx }) => {
+    return ctx?.dbUser;
+  }
+  ),
+  
   getUserById: protectedProcedure
   .input(z.object({
     id: z.string(),

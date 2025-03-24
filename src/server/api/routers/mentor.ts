@@ -17,6 +17,7 @@ export const mentorRouter = createTRPCRouter({
       role : z.enum(["STUDENT", "MENTOR", "STARTUP"]),
       isRegistered : z.boolean(),
       avatarUrl : z.string(),
+      companyType : z.string(),
       hiringFields : z.array(z.string()),
      }))
 
@@ -35,7 +36,8 @@ export const mentorRouter = createTRPCRouter({
               userId: ctx?.dbUser?.id!, 
               mentorName : input.name,
               hiringFields : input.hiringFields,
-          },
+              companyType : input.companyType,
+          },  
         }),
         ctx.db.user.update({
           where: { id: ctx?.dbUser?.id! },
@@ -44,28 +46,34 @@ export const mentorRouter = createTRPCRouter({
             role: input.role,
             isRegistered: input.isRegistered,
             avatarUrl: input.avatarUrl,
+
           },
         })
       ])
       
     }),
 
-  // updateMentor: protectedProcedure
-  // .input(z.object({
-  //   positionTitle : z.string(),
-  //   industryExperience : z.string(),
-  //   yearsOfExperience : z.string(),
-  // linkedInUrl : z.string().url(),
-  // professionalIdUrl : z.string().url(),
-  // companyEmail : z.string().email(),
-  // }))
-  // .mutation(async ({ ctx, input }) => {
-  //   return ctx.db.student.update({
-  //     where: { userId: ctx?.dbUser?.id },
-  //     data: input,
-  //   });
-  // }
-  // ),
+  updateMentor: protectedProcedure
+  .input(z.object({
+    linkedinUrl : z.string().url(),
+    companyType : z.string(),
+    currentCompany : z.string(),
+    pinCode : z.number(),
+    state : z.string(),
+  hiringFields : z.array(z.string()),
+  jobTitle : z.string(),
+  experience : z.string(),
+  mentorName : z.string(),
+  industry : z.string(),
+ 
+  }))
+  .mutation(async ({ ctx, input }) => {
+    return ctx.db.mentor.update({
+      where: { userId: ctx?.dbUser?.id },
+      data: input,
+    });
+  }
+  ),
 
   // deleteMentor: protectedProcedure
   // .mutation(async ({ ctx }) => {
@@ -94,6 +102,8 @@ export const mentorRouter = createTRPCRouter({
         experience: true,
         industry: true,
         hiringFields: true,
+        companyType: true,
+        state : true,
         meetingEvents: {
           select: {
             id: true,
@@ -117,6 +127,8 @@ export const mentorRouter = createTRPCRouter({
         experience: true,
         industry: true,
         hiringFields: true,
+        companyType: true,
+        state : true,
         meetingEvents : {
           select : {
             id : true,
@@ -126,6 +138,55 @@ export const mentorRouter = createTRPCRouter({
       }
     });
 
+  }),
+
+  getMentorData: publicProcedure
+  .input(z.object({ mentorId: z.string() }))
+  .query(async ({ ctx, input }) => {
+    const mentor = await ctx.db.mentor.findFirst({
+      where: {
+        userId: input.mentorId,
+      },
+      include: {
+        user: true, // Include related User data
+        meetingEvents: true, // Include meeting events
+        availability: true, // Include availability
+        scheduledMeetings: {
+          include: {
+            student: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        }, // Include scheduled meetings with student info
+      },
+    });
+  }),
+
+
+  getMentorDataById: protectedProcedure
+  .query(async ({ ctx }) => {
+    const mentor = await ctx.db.mentor.findFirst({
+      where: {
+        userId: ctx?.dbUser?.id!,
+      },
+      include: {
+        user: true, // Include related User data
+        meetingEvents: true, // Include meeting events
+        availability: true, // Include availability
+        scheduledMeetings: {
+          include: {
+            student: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        }, // Include scheduled meetings with student info
+      },
+    });
+    return mentor;
   })
 
 

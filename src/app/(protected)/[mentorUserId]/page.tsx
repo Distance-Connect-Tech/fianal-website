@@ -13,10 +13,26 @@ const page = async ({ params }: { params: Params }) => {
   const { mentorUserId } = use(params);
 
   const { data: chatRoom } =
-    api.chatRoom.getChatRoomByMentorAndStudentId.useQuery({ mentorUserId });
-  const { data: mentor, isLoading } = api.mentor.getMentorByUserId.useQuery({
-    userId: mentorUserId,
-  });
+    api.chatRoom.getChatRoomByMentorAndStudentId.useQuery(
+      { mentorUserId },
+      {
+        // Reduce retries to avoid rate limit issues
+        retry: 1,
+        // Increase staleTime to reduce refetches
+        staleTime: 5 * 60 * 1000, // 5 minutes
+      },
+    );
+  const { data: mentor, isLoading } = api.mentor.getMentorByUserId.useQuery(
+    {
+      userId: mentorUserId,
+    },
+    {
+      // Reduce retries to avoid rate limit issues
+      retry: 1,
+      // Increase staleTime to reduce refetches
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  );
   const createChatRoomMutation = api.chatRoom.createChatRoom.useMutation({
     onSuccess: () => {
       //console.log("Chat Room Created")

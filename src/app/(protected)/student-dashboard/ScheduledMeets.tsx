@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { api } from '@/trpc/react';
+import React from "react";
+import { api } from "@/trpc/react";
 
 // Import shadcn/ui components
-import { Card } from '@/components/ui/card';
+import { Card } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -12,15 +12,23 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 
 const ScheduledMeets = () => {
   const { data, isError, isLoading } =
-    api.scheduledMeetings.getScheduledMeetingsListByStudent.useQuery();
+    api.scheduledMeetings.getScheduledMeetingsListByStudent.useQuery(
+      undefined,
+      {
+        // Reduce retries to avoid rate limit issues
+        retry: 1,
+        // Increase staleTime to reduce refetches
+        staleTime: 5 * 60 * 1000, // 5 minutes
+      },
+    );
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex h-screen items-center justify-center">
         <p className="text-lg">Loading...</p>
       </div>
     );
@@ -28,7 +36,7 @@ const ScheduledMeets = () => {
 
   if (isError || !data) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex h-screen items-center justify-center">
         <p className="text-lg text-red-500">Error loading scheduled meetings</p>
       </div>
     );
@@ -36,18 +44,19 @@ const ScheduledMeets = () => {
 
   // Split meetings into upcoming and expired based on the current date/time.
   // Adjust this logic as needed (for example, consider the meeting time if needed).
- 
-  const filterMeetingList=(type : string)=>{
-    const currentTimestamp = new Date().getTime();
-    if(type=='upcoming')
-    {
-        return data?.filter(item=>Number(item?.formatedTimeStamp)>=Number(currentTimestamp));
-    }
-    else{
-        return data?.filter(item=>Number(item?.formatedTimeStamp)<Number(currentTimestamp));
 
+  const filterMeetingList = (type: string) => {
+    const currentTimestamp = new Date().getTime();
+    if (type == "upcoming") {
+      return data?.filter(
+        (item) => Number(item?.formatedTimeStamp) >= Number(currentTimestamp),
+      );
+    } else {
+      return data?.filter(
+        (item) => Number(item?.formatedTimeStamp) < Number(currentTimestamp),
+      );
     }
-}
+  };
   const renderTable = (meetings: typeof data) => (
     <Table>
       <TableHeader>
@@ -86,13 +95,13 @@ const ScheduledMeets = () => {
   );
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
+    <div className="container mx-auto space-y-8 px-4 py-8">
       {/* Upcoming Meetings Section */}
       <Card>
         <div className="p-6">
-          <h2 className="text-2xl font-bold mb-6">Upcoming Meetings</h2>
-          {filterMeetingList('upcoming')!.length > 0 ? (
-            renderTable(filterMeetingList('upcoming')!)
+          <h2 className="mb-6 text-2xl font-bold">Upcoming Meetings</h2>
+          {filterMeetingList("upcoming")!.length > 0 ? (
+            renderTable(filterMeetingList("upcoming")!)
           ) : (
             <p className="text-gray-500">No upcoming meetings found.</p>
           )}
@@ -102,9 +111,9 @@ const ScheduledMeets = () => {
       {/* Expired Meetings Section */}
       <Card>
         <div className="p-6">
-          <h2 className="text-2xl font-bold mb-6">Expired Meetings</h2>
-          {filterMeetingList('expired')!.length > 0 ? (
-            renderTable(filterMeetingList('expired')!)
+          <h2 className="mb-6 text-2xl font-bold">Expired Meetings</h2>
+          {filterMeetingList("expired")!.length > 0 ? (
+            renderTable(filterMeetingList("expired")!)
           ) : (
             <p className="text-gray-500">No expired meetings found.</p>
           )}

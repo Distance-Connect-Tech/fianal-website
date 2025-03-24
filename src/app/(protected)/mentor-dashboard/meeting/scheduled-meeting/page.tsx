@@ -10,7 +10,15 @@ function ScheduledMeeting() {
     data: scheduledMeetingsListByMentorList,
     isLoading,
     isError,
-  } = api.scheduledMeetings.getScheduledMeetingsListByMentor.useQuery();
+  } = api.scheduledMeetings.getScheduledMeetingsListByMentor.useQuery(
+    undefined,
+    {
+      // Reduce retries to avoid rate limit issues
+      retry: 1,
+      // Increase staleTime to reduce refetches
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  );
 
   const filterMeetingList = (type: string) => {
     const currentTimestamp = new Date().getTime();

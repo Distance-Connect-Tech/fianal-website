@@ -1,4 +1,3 @@
-
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
@@ -6,6 +5,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/
 export const chatRoomRouter = createTRPCRouter({
  
 //create a chat room
+
 
 createChatRoom: protectedProcedure
     .input(z.object({
@@ -21,28 +21,74 @@ createChatRoom: protectedProcedure
                 studentUnreadCount: 0,
 
             },
+            select: {
+                id: true,
+                lastMessage: true,
+               studentUnreadCount: true,
+                mentor : {
+                    select : {
+                        mentorName : true,
+                    }
+                },
+                student : {
+                    select : {
+                        studentName : true,
+                    }
+                }
+            }
         });
     }),
+    
+createChatRoomByStudentId: protectedProcedure
+.input(z.object({
+    studentUserId: z.string(),
+}))
+.mutation(({ ctx, input }) => {
+    return ctx.db.chatRoom.create({
+        data: {
+            mentorUserId: ctx.dbUser!.id,
+            studentUserId : input.studentUserId,
+            lastMessage: "",
+            mentorUnreadCount: 0,
+            studentUnreadCount: 0,
+
+        },
+        select: {
+            id: true,
+            lastMessage: true,
+           studentUnreadCount: true,
+            mentor : {
+                select : {
+                    mentorName : true,
+                }
+            },
+            student : {
+                select : {
+                    studentName : true,
+                }
+            }
+        }
+    });
+}),
 
 //get chat room by mentor id
 getChatRoomById: protectedProcedure
     .input(z.object({
-        chatRoomId: z.string(),
+        mentorUserId: z.string(),
     }))
     .query(({ ctx, input }) => {
         return ctx.db.chatRoom.findFirst({
             where: {
-                id: input.chatRoomId,
+                mentorUserId: input.mentorUserId,
+                studentUserId: ctx.dbUser!.id,
             },
             select : {
-                mentorUserId :true,
-                studentUserId : true,
+                id : true,
                 lastMessage : true,
                 mentorUnreadCount : true,
                 studentUnreadCount : true,
-                id: true,
                 student : true
-
+                
                 
             }
         });
@@ -58,6 +104,21 @@ getChatRoomById: protectedProcedure
                 mentorUserId: input.mentorUserId,
                 studentUserId: ctx.dbUser!.id,
             },
+            select: {
+                id: true,
+                lastMessage: true,
+               studentUnreadCount: true,
+                mentor : {
+                    select : {
+                        mentorName : true,
+                    }
+                },
+                student : {
+                    select : {
+                        studentName : true,
+                    }
+                }
+            }
         });
     }),
 
@@ -84,11 +145,42 @@ getChatRoomById: protectedProcedure
             }
         });
     }),
-    getChatRoomByStudentId: protectedProcedure
+
+    getChatRoomByStudentBackendId: protectedProcedure
     .query(({ ctx }) => {
         return ctx.db.chatRoom.findMany({
             where: {
                 studentUserId: ctx.dbUser!.id,
+
+            },
+        
+            select: {
+                id: true,
+                student : {
+                    select : {
+                        studentName : true,
+                    }
+                },
+                lastMessage : true,
+                studentUnreadCount : true,
+                mentor : {
+                    select : {
+                        mentorName : true,
+                    }
+                }
+            }   
+        });
+    }),
+
+    getChatRoomByStudentId: protectedProcedure
+    .input(z.object({
+        studentUserId: z.string(),
+    }))
+    .query(({ ctx, input }) => {
+        return ctx.db.chatRoom.findFirst({
+            where: {
+                studentUserId: input.studentUserId,
+                mentorUserId: ctx.dbUser!.id,
             },
             select: {
                 id: true,

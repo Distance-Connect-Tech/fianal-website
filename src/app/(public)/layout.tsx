@@ -22,33 +22,26 @@ export default async function RootLayout({
   // Fetch the user session
   const session = await auth0.getSession();
   const user = session?.user;
-  
+
   let loggedIn = false;
   if (user) {
-    loggedIn = true;  
+    loggedIn = true;
   }
 
-
-  
-    // Fetch blogs once on the server
-    const response = await client.getEntries({ content_type: "pageBlogPost" });
-    const initialBlogs = response?.items?.sort(
-      (a, b) =>
-        new Date(b?.sys?.updatedAt).getTime() - new Date(a?.sys?.updatedAt).getTime(),
-    );
-    console.log("initialBlogs")
-
+  // Fetch blogs once on the server
+  const response = await client.getEntries({ content_type: "pageBlogPost" });
+  const initialBlogs = response?.items?.sort(
+    (a, b) =>
+      new Date(b?.sys?.updatedAt).getTime() -
+      new Date(a?.sys?.updatedAt).getTime(),
+  );
+  console.log("initialBlogs");
 
   return (
-    <html lang="en" className={GeistSans.variable}>
-      <body>
-
-
-        <Navbar blogs={initialBlogs} loggedId={loggedIn} />
-        {children}
-      <Footer/>
-   
-      </body>
-    </html>
+    <>
+      <Navbar blogs={initialBlogs} loggedId={loggedIn} />
+      {children}
+      <Footer />
+    </>
   );
 }

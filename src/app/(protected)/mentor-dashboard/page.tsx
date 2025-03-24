@@ -1,35 +1,50 @@
 import { api } from "@/trpc/server";
 import Link from "next/link";
 import React from "react";
-// Adjust these imports according to your shadcn/ui component paths
 import ChatRooms from "./_components/chatRooms";
+import ProgressChart from "./_components/ProgressChart";
+import ScheduledSessions from "./_components/ScheduledSessions";
+import { MessageSquareMore } from "lucide-react";
 
 const Page = async () => {
   const chatRooms = await api.chatRoom.getChatRoomByMentorId();
-  //console.log(chatRooms);
+  // Get scheduled sessions (you may need to create an API endpoint for this)
+  const scheduledSessions =
+    await api.scheduledMeetings.getMentorScheduledMeetings();
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen  w-full p-4 md:p-8">
       {/* Header */}
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Mentor Dashboard</h1>
-      </header>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">
+          Dashboard
+        </h1>
+      </div>
 
-      {/* Chatrooms Section */}
-      <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {chatRooms.map((room) => (
-          <ChatRooms key={room.id} room={room} />
-        ))}
-      </section>
+      {/* Progress Chart */}
+      <div className="mb-6 overflow-hidden rounded-lg bg-white p-4 shadow-sm">
+        <ProgressChart />
+      </div>
 
-      {/* Footer / Navigation */}
-      <footer className="mt-8">
-        <Link href="/mentor-dashboard/meeting">
-          <div className="inline-block rounded bg-blue-600 px-6 py-3 text-white transition hover:bg-blue-700">
-            Go to Meeting
-          </div>
-        </Link>
-      </footer>
+      {/* Scheduled Sessions */}
+      <div className="mb-6">
+        <div className="mb-2 flex items-center justify-between">
+          <h2 className="text-lg font-medium text-gray-900">
+            Your Scheduled Sessions
+          </h2>
+          <Link
+            href="/mentor-dashboard/meetings"
+            className="text-sm text-blue-600"
+          >
+            See All
+          </Link>
+        </div>
+        <div className="space-y-4">
+          <ScheduledSessions sessions={scheduledSessions} />
+        </div>
+      </div>
+
+     
     </div>
   );
 };

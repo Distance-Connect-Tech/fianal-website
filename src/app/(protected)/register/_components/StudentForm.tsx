@@ -18,9 +18,9 @@ import CollegeForm from "./CollegeForm"
 import WorkingForm from "./WorkingForm"
 
 
-export default function StudentForm({step, user} : {step: number , user : {firstName : string, lastName : string, }}) {
+export default function StudentForm({user} : {user : {firstName : string, lastName : string}}) {
   const [studentRole, setStudentRole] = useState<string>("")
-
+  const [step, setStep] = useState<number>(2)
 
   
 
@@ -31,9 +31,18 @@ export default function StudentForm({step, user} : {step: number , user : {first
             <div>How would you like to get started?</div>
         </h1>
         <div className="xl:grid xl:grid-cols-2  xl:gap-x-16 xl:gap-y-10 flex flex-wrap gap-y-6   mt-4">
-            <button onClick={()=> setStudentRole("HIGHSCHOOL")} className="focus:border-blue-400 focus:text-[#0A64BC] xl:w-[233.003px] xl:h-[65.66px] w-[104px] h-[40px] flex-shrink-0 rounded-[8px] border border-[#8A8A8A] shadow-[0px_2px_2px_2px_rgba(204,204,204,0.1)]">High School</button>
-            <button onClick={()=> setStudentRole("COLLEGE")} className=" focus:text-[#0A64BC] focus:border-blue-400 xl:w-[233.003px] ml-10 xl:ml-0 xl:h-[65.66px] w-[153px] h-[40px]  flex-shrink-0 rounded-[8px] border border-[#8A8A8A] shadow-[0px_2px_2px_2px_rgba(204,204,204,0.1)]">College</button>
-            <button onClick={()=> setStudentRole("WORKING")} className=" focus:text-[#0A64BC] focus:border-blue-400 xl:w-[233.003px] xl:h-[65.66px] w-[188px] h-[40px]  flex-shrink-0 rounded-[8px] border border-[#8A8A8A] shadow-[0px_2px_2px_2px_rgba(204,204,204,0.1)]">Working</button>
+            <button onClick={()=> {
+              setStudentRole("HIGHSCHOOL")
+              setStep(3)
+              }} className="focus:border-blue-400 focus:text-[#0A64BC] xl:w-[233.003px] xl:h-[65.66px] w-[104px] h-[40px] flex-shrink-0 rounded-[8px] border border-[#8A8A8A] shadow-[0px_2px_2px_2px_rgba(204,204,204,0.1)]">High School</button>
+            <button onClick={()=> {
+              setStudentRole("COLLEGE")
+              setStep(3)
+              }} className=" focus:text-[#0A64BC] focus:border-blue-400 xl:w-[233.003px] ml-10 xl:ml-0 xl:h-[65.66px] w-[153px] h-[40px]  flex-shrink-0 rounded-[8px] border border-[#8A8A8A] shadow-[0px_2px_2px_2px_rgba(204,204,204,0.1)]">College</button>
+            <button onClick={()=> {
+              setStudentRole("WORKING")
+              setStep(3)
+            }} className=" focus:text-[#0A64BC] focus:border-blue-400 xl:w-[233.003px] xl:h-[65.66px] w-[188px] h-[40px]  flex-shrink-0 rounded-[8px] border border-[#8A8A8A] shadow-[0px_2px_2px_2px_rgba(204,204,204,0.1)]">Working</button>
         </div>
         </div>}
       {/* High ScHool Form  */}

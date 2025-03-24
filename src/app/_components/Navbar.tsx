@@ -33,9 +33,9 @@ const Navbar = ({ loggedId, blogs }: { loggedId: boolean; blogs: any }) => {
   //get only top 4 blogs
   const top4Blogs = blogs?.slice(0, 4);
   const components = top4Blogs?.map((blog: any) => ({
-    title: blog?.fields?.title,
+    title: blog?.fields?.title.trim().substring(0, 20).concat("..."),
     href: `/blog/${blog?.fields?.slug}`,
-    description: blog?.fields?.shortDescription,
+    description: blog?.fields?.shortDescription.trim().substring(0, 50).concat("..."),
     imageUrl: blog?.fields?.featuredImage?.fields?.file?.url,
     imageAlt: blog?.fields?.featuredImage?.fields?.title,
   }));

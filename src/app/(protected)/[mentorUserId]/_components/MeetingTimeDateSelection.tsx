@@ -69,10 +69,20 @@ function MeetingTimeDateSelection({
   const [step, setStep] = useState<number>(1);
 
   const { data: prevBookingData } =
-    api.scheduledMeetings.getScheduledMeetingsList.useQuery({
-      selectedDate: date,
-      eventId: eventInfo.id,
-    });
+    api.scheduledMeetings.getScheduledMeetingsList.useQuery(
+      {
+        selectedDate: date,
+        eventId: eventInfo.id,
+      },
+      {
+        // Reduce retries to avoid rate limit issues
+        retry: 1,
+        // Increase staleTime to reduce refetches
+        staleTime: 1 * 60 * 1000, // 1 minute
+        // Only run the query when we have a valid date
+        enabled: !!date,
+      },
+    );
 
   const sendEmaill = api.email.sendEmail.useMutation({
     onSuccess: () => {
@@ -219,6 +229,7 @@ function MeetingTimeDateSelection({
       meetUrl: meetLink,
       eventId: eventInfo.id,
       userNote: userNote,
+      eventName: eventInfo.eventName,
     });
   };
 

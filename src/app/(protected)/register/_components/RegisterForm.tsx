@@ -37,17 +37,7 @@ export default function RegisterForm({user} : {user : {firstName : string, lastN
           <div className="m-auto w-[300px] bg-gradient-to-r from-[#496F74] via-[#6E9195] to-[#2D4F61] bg-clip-text text-center font-inter text-2xl font-bold leading-[24px] text-transparent md:text-2xl xl:m-0">
             Distance Connect
           </div>
-          <div className="hidden w-[140px] items-center gap-4 xl:flex">
-            <Select defaultValue="en-UK">
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Language" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en-UK">English (UK)</SelectItem>
-                <SelectItem value="en-US">English (US)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          
         </div>
 
         {step === 1 ? <div className="mx-auto w-full   flex justify-center items-center flex-col  text-[#8A8A8A] font-inter text-[15px] xl:text-[20px] font-normal leading-[16px]">
@@ -57,23 +47,32 @@ export default function RegisterForm({user} : {user : {firstName : string, lastN
         <div className="xl:grid xl:grid-cols-2  xl:gap-x-16 xl:gap-y-10 flex flex-wrap gap-y-6   mt-4">
             <button onClick={()=> setRole("STARTUP")} className="focus:border-blue-400 focus:text-[#0A64BC] xl:w-[233.003px] xl:h-[65.66px] w-[104px] h-[40px] 
  flex-shrink-0 rounded-[8px] border border-[#8A8A8A] shadow-[0px_2px_2px_2px_rgba(204,204,204,0.1)]">To Hire</button>
-            <button onClick={()=> setRole("MENTOR")} className=" focus:text-[#0A64BC] focus:border-blue-400 xl:w-[233.003px] ml-10 xl:ml-0 xl:h-[65.66px] w-[153px] h-[40px]  flex-shrink-0 rounded-[8px] border border-[#8A8A8A] shadow-[0px_2px_2px_2px_rgba(204,204,204,0.1)]">To be a Mentor</button>
-            <button onClick={()=> setRole("STUDENT")} className=" focus:text-[#0A64BC] focus:border-blue-400 xl:w-[233.003px] xl:h-[65.66px] w-[188px] h-[40px]  flex-shrink-0 rounded-[8px] border border-[#8A8A8A] shadow-[0px_2px_2px_2px_rgba(204,204,204,0.1)]">Placement Preparation</button>
-            <button onClick={()=> setRole("STUDENT")} className="focus:text-[#0A64BC] focus:border-blue-400 xl:w-[233.003px] xl:h-[65.66px] w-[94px] h-[40px] flex-shrink-0 rounded-[8px] border border-[#8A8A8A] shadow-[0px_2px_2px_2px_rgba(204,204,204,0.1)] ml-10 xl:ml-0">Find Jobs</button>
+            <button onClick={()=> {
+              setRole("MENTOR")
+              setStep(2)
+              }} className=" focus:text-[#0A64BC] focus:border-blue-400 xl:w-[233.003px] ml-10 xl:ml-0 xl:h-[65.66px] w-[153px] h-[40px]  flex-shrink-0 rounded-[8px] border border-[#8A8A8A] shadow-[0px_2px_2px_2px_rgba(204,204,204,0.1)]">To be a Mentor</button>
+            <button onClick={()=> {
+              setRole("STUDENT")
+              setStep(2)
+              }} className=" focus:text-[#0A64BC] focus:border-blue-400 xl:w-[233.003px] xl:h-[65.66px] w-[188px] h-[40px]  flex-shrink-0 rounded-[8px] border border-[#8A8A8A] shadow-[0px_2px_2px_2px_rgba(204,204,204,0.1)]">Placement Preparation</button>
+            <button onClick={()=> {
+              setRole("STUDENT")
+              setStep(2)
+              }} className="focus:text-[#0A64BC] focus:border-blue-400 xl:w-[233.003px] xl:h-[65.66px] w-[94px] h-[40px] flex-shrink-0 rounded-[8px] border border-[#8A8A8A] shadow-[0px_2px_2px_2px_rgba(204,204,204,0.1)] ml-10 xl:ml-0">Find Jobs</button>
         </div>
         </div> :
         <div>
             {role === "MENTOR"  && <MentorForm user={user}/>}
-            {role === "STUDENT" &&  <StudentForm user={user} step={step}/>}
+            {role === "STUDENT" &&  <StudentForm user={user} />}
             {role === "STARTUP" && <StartupForm  />}
             </div>}
         <div>
-          <div className={`w-full flex items-center mt-8 ${step === 1 ? "justify-end" : "justify-between"}`}>
+          {/* <div className={`w-full flex items-center mt-8 ${step === 1 ? "justify-end" : "justify-between"}`}>
               {step == 1 && <button onClick={() => setStep((prev) =>  prev === 2 ? 3 : 2 )} className="text-[#4D7CD6] font-inter text-[26px] font-normal leading-[24px] underline decoration-solid decoration-0 underline-offset-auto">Next {">"}</button>}
             {step === 2 && <button onClick={() => setStep((prev) => prev === 2 ? 1 : 3)} className="text-[#4D7CD6] font-inter text-[26px] font-normal leading-[24px] underline decoration-solid decoration-0 underline-offset-auto">{"<"} Back</button>}
             {step === 2 && role==="STUDENT" && <button onClick={() => setStep((prev) => prev === 2 ? 3 : 2)} className="text-[#4D7CD6] font-inter text-[26px] font-normal leading-[24px] underline decoration-solid decoration-0 underline-offset-auto">Next {">"}</button>}
             {step === 3 && role==="STUDENT" && <button onClick={() => setStep((prev) => prev === 2 ? 3 : 2)} className="text-[#4D7CD6] font-inter text-[26px] font-normal leading-[24px] underline decoration-solid decoration-0 underline-offset-auto">{"<"} Back</button>}
-          </div>
+          </div> */}
         </div>
       </div>
 

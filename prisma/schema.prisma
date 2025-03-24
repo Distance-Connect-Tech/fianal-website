@@ -1,6 +1,6 @@
 // Prisma Client Generator
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
@@ -28,7 +28,6 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
 }
 
 // Enum for User Role
@@ -50,7 +49,8 @@ model Student {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique @db.ObjectId
-
+  linkedinUrl String?
+  
   studentRole SrudentRole?
   studentName String?
 
@@ -81,6 +81,7 @@ model Mentor {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique @db.ObjectId
+  linkedinUrl String?
 
   mentorName     String?
   currentCompany String?
@@ -90,6 +91,7 @@ model Mentor {
   pinCode        Int?
   state          String?
   hiringFields   String[]
+  companyType    String
 
   meetingEvents     MeetingEvent[]
   availability      Availability?
@@ -127,7 +129,7 @@ model MeetingEvent {
   eventName   String
   duration    Int
   description String?
-  meetEmail  String
+  meetEmail   String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -163,11 +165,14 @@ model ScheduledMeetings {
   duration          Int
   meetUrl           String
   eventId           String
+  eventName         String
   userNote          String
+  completed         Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
 model ChatRoom {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -177,32 +182,31 @@ model ChatRoom {
   student       Student @relation(fields: [studentUserId], references: [userId])
   studentUserId String  @db.ObjectId
 
-  lastMessage String
-  mentorUnreadCount  Int @default(0)
-  studentUnreadCount Int @default(0)
-  chatMessages chatMessage[]
+  lastMessage        String
+  mentorUnreadCount  Int           @default(0)
+  studentUnreadCount Int           @default(0)
+  chatMessages       chatMessage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  
+
   @@index([mentorUserId, studentUserId], name: "mentor_student_index")
 }
-
 
 model chatMessage {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  senderId String
+  senderId   String
   senderRole String
-  message String?
-  
+  message    String?
 
-  chatRoom ChatRoom @relation(fields: [chatRoomId], references: [id])
-  chatRoomId String @db.ObjectId
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoomId String   @db.ObjectId
 
   imageName String?
   imagePath String?
-  
 
   type String @default("TEXT")
 
@@ -211,7 +215,3 @@ model chatMessage {
 
   @@index([chatRoomId, createdAt], name: "chatRoom_createdAt_index")
 }
-
-
-
-

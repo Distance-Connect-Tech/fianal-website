@@ -40,12 +40,7 @@ import {
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 
-const hiringFields = [
-  { label: "Python", value: "python" },
-  { label: "UX/UI", value: "uxui" },
-  { label: "Machine Learning", value: "machine-learning" },
-  { label: "Soft Skills", value: "soft-skills" },
-] as const;
+import {hiringFields} from "@/constants/hiringFirlds" 
 
 const formSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -305,9 +300,56 @@ export default function WorkingForm({
                     <FormLabel className="absolute left-[10px] top-[0px] bg-white px-1 font-inter text-[14px] font-normal leading-[16px] text-[#8A8A8A] peer-focus:text-black">
                       State
                     </FormLabel>
-                    <FormControl className="floating-input peer w-[300px] text-[#8A8A8A]">
-                      <Input placeholder="" type="text" {...field} />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl className="floating-input peer w-[300px] text-[#8A8A8A]">
+                        <SelectTrigger>
+                          <SelectValue placeholder="" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        
+                        <SelectItem value="andaman-nicobar-islands">Andaman and Nicobar Islands</SelectItem>
+                          <SelectItem value="andhra-pradesh">Andhra Pradesh</SelectItem>
+                          <SelectItem value="arunachal-pradesh">Arunachal Pradesh</SelectItem>
+                          <SelectItem value="assam">Assam</SelectItem>
+                          <SelectItem value="bihar">Bihar</SelectItem>
+                          <SelectItem value="chandigarh">Chandigarh</SelectItem>
+                          <SelectItem value="chhattisgarh">Chhattisgarh</SelectItem>
+                          <SelectItem value="dadra-nagar-haveli-daman-diu">Dadra and Nagar Haveli and Daman and Diu</SelectItem>
+                          <SelectItem value="delhi">Delhi</SelectItem>
+                          <SelectItem value="goa">Goa</SelectItem>
+                          <SelectItem value="gujarat">Gujarat</SelectItem>
+                          <SelectItem value="haryana">Haryana</SelectItem>
+                          <SelectItem value="himachal-pradesh">Himachal Pradesh</SelectItem>
+                          <SelectItem value="jammu-kashmir">Jammu and Kashmir</SelectItem>
+                          <SelectItem value="jharkhand">Jharkhand</SelectItem>
+                          <SelectItem value="karnataka">Karnataka</SelectItem>
+                          <SelectItem value="kerala">Kerala</SelectItem>
+                          <SelectItem value="ladakh">Ladakh</SelectItem>
+                          <SelectItem value="lakshadweep">Lakshadweep</SelectItem>
+                          <SelectItem value="madhya-pradesh">Madhya Pradesh</SelectItem>
+                          <SelectItem value="maharashtra">Maharashtra</SelectItem>
+                          <SelectItem value="manipur">Manipur</SelectItem>
+                          <SelectItem value="meghalaya">Meghalaya</SelectItem>
+                          <SelectItem value="mizoram">Mizoram</SelectItem>
+                          <SelectItem value="nagaland">Nagaland</SelectItem>
+                          <SelectItem value="odisha">Odisha</SelectItem>
+                          <SelectItem value="puducherry">Puducherry</SelectItem>
+                          <SelectItem value="punjab">Punjab</SelectItem>
+                          <SelectItem value="rajasthan">Rajasthan</SelectItem>
+                          <SelectItem value="sikkim">Sikkim</SelectItem>
+                          <SelectItem value="tamil-nadu">Tamil Nadu</SelectItem>
+                          <SelectItem value="telangana">Telangana</SelectItem>
+                          <SelectItem value="tripura">Tripura</SelectItem>
+                          <SelectItem value="uttar-pradesh">Uttar Pradesh</SelectItem>
+                          <SelectItem value="uttarakhand">Uttarakhand</SelectItem>
+                          <SelectItem value="west-bengal">West Bengal</SelectItem>
+
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
